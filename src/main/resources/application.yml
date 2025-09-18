@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: worklog
+  datasource:
+    generate-unique-name: false
+    name: worklog
