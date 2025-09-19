@@ -1,5 +1,9 @@
 package com.arnor4eck.worklog;
 
+import com.arnor4eck.worklog.construction_project.ConstructionProject;
+import com.arnor4eck.worklog.construction_project.ConstructionProjectRepository;
+import com.arnor4eck.worklog.post.Post;
+import com.arnor4eck.worklog.post.PostRepository;
 import com.arnor4eck.worklog.user.Role;
 import com.arnor4eck.worklog.user.RoleRepository;
 import com.arnor4eck.worklog.user.User;
@@ -21,6 +25,10 @@ public class WorklogApplication {
 
 	private final UserRepository userRepository;
 
+	private final PostRepository postRepository;
+
+	private final ConstructionProjectRepository constructionProjectRepository;
+
 	private final PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
@@ -38,8 +46,26 @@ public class WorklogApplication {
 					passwordEncoder.encode("password"), "vladi",
 					List.of(roles.getLast())));
 
+			ConstructionProject project = new ConstructionProject("project_1", "test project",
+					24.5734563746, 56.5617325627);
+			project.addUser(users.getLast());
+
 			roleRepository.saveAll(roles);
 			userRepository.saveAll(users);
+			constructionProjectRepository.save(project);
+
+			List<Post> posts = List.of(new Post("escape the backrooms", "biba"),
+					new Post("escape the backrooms2", "biba2"));
+
+			ConstructionProject project1 = constructionProjectRepository.findById(1L).orElseThrow();
+			User user1 = userRepository.findById(1L).orElseThrow();
+
+			posts.forEach(p -> {
+				p.setObject(project1);
+				p.setAuthor(user1);
+			});
+			postRepository.saveAll(posts);
+
 		};
 	}
 }
