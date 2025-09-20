@@ -4,3 +4,7 @@ spring:
   datasource:
     generate-unique-name: false
     name: worklog
+
+jwt:
+  secret: labububabyj0hnprostoesh1k1abububabyjohnprost0eshiklabububabyj0hnprostoeshik
+  lifetime: 1800000
