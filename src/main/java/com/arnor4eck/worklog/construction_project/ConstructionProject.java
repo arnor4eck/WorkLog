@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,20 +38,22 @@ public class ConstructionProject {
         this.description = description;
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
-        this.users = new LinkedList<>();
     }
 
-    public User addUser(User user){
-        this.users.add(user);
+    @OneToOne
+    @JoinColumn(name = "contractor_id", referencedColumnName = "id")
+    private User responsibleContractor;
 
-        return user;
-    }
 
-    @ManyToMany
+    @OneToOne
+    @JoinColumn(name = "supervision_id", referencedColumnName = "id")
+    private User responsibleSupervision;
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "project_users",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 }

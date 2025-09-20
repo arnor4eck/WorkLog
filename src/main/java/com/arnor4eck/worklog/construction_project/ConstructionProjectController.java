@@ -5,14 +5,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "objects/")
 @AllArgsConstructor
 public class ConstructionProjectController {
-    private final ConstructionProjectRepository constructionProjectRepository;
+    private final ConstructionProjectService constructionProjectService;
 
-    @GetMapping
-    public Iterable<ConstructionProject> getAll(){
-        return constructionProjectRepository.findAll();
+    @GetMapping(path = "my_objects")
+    public List<ConstructionProjectDTO> getUserObjects(){
+        return constructionProjectService.getUserObjects();
     }
 }
