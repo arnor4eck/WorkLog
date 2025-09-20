@@ -42,17 +42,31 @@ public class WorklogApplication {
 					new Role("ROLE_INSPECTOR"), new Role("ROLE_DEVELOPER"),
 					new Role("ROLE_ADMIN"), new Role("ROLE_WORKER"));
 
+			roleRepository.saveAll(roles);
+
 			List<User> users = List.of(new User("vladi52@ngg.com", "Прораб",
 					passwordEncoder.encode("password"), "vladi",
-					List.of(roles.getLast())));
+					List.of(roles.getLast())),
+					new User("bere@mail.ru", "застройщик",
+							passwordEncoder.encode("password"), "berenby",
+							List.of(roles.get(3))),
+					new User("kura@jam.com", "Технический контроль",
+							passwordEncoder.encode("password"), "vladi", List.of(roles.get(1))));
+
+			userRepository.saveAll(users);
 
 			ConstructionProject project = new ConstructionProject("project_1", "test project",
 					24.5734563746, 56.5617325627);
-			project.addUser(users.getLast());
 
-			roleRepository.saveAll(roles);
-			userRepository.saveAll(users);
-			constructionProjectRepository.save(project);
+			ConstructionProject project2 = new ConstructionProject("project_2", "test2 project",
+					24.5734563746, 56.5617325627);
+
+
+			project.getUsers().add(users.get(0));
+			project.addResponsibleSupervision(users.get(1));
+			project.addResponsibleContractor(users.get(2));
+
+			constructionProjectRepository.saveAll(List.of(project, project2));
 
 			List<Post> posts = List.of(new Post("escape the backrooms", "biba"),
 					new Post("escape the backrooms2", "biba2"));

@@ -34,4 +34,5 @@ public class ConstructionProjectDTO {
                             constructionProject.getResponsibleSupervision()))
                 .build();
     }
+
 }

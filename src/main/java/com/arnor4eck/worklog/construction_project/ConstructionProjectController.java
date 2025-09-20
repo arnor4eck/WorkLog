@@ -13,7 +13,7 @@ import java.util.List;
 public class ConstructionProjectController {
     private final ConstructionProjectService constructionProjectService;
 
-    @GetMapping(path = "my_objects")
+    @GetMapping(path = "my_objects/")
     public List<ConstructionProjectDTO> getUserObjects(){
         return constructionProjectService.getUserObjects();
     }

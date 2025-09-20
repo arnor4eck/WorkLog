@@ -5,6 +5,11 @@ spring:
     generate-unique-name: false
     name: worklog
 
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+
 jwt:
   secret: labububabyj0hnprostoesh1k1abububabyjohnprost0eshiklabububabyj0hnprostoeshik
   lifetime: 1800000

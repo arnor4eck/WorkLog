@@ -32,13 +32,13 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest){
-        try{ // аутентификация по имени и паролю
+        try{ // аутентификация по email и паролю
             manager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
             User user = userRepository.findByEmail(authRequest.getEmail());
             String token = jwtUtils.generateToken(user);
 
-            log.info("user {} authorizated", authRequest.getEmail());
+            log.info("user '{}' authenticated", authRequest.getEmail());
             return ResponseEntity.ok(new JwtResponse(token));
         } catch (AuthenticationException e) {
             return new ResponseEntity<>(

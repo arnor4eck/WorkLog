@@ -51,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/objects/**").authenticated()
                         .requestMatchers("/", "/**", "/authorization").permitAll();
         }).csrf(CsrfConfigurer::disable)
-                .sessionManagement(AbstractHttpConfigurer::disable) // отключение сессий (для REST)
+                .sessionManagement(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

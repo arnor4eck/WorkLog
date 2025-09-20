@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "construction_projects")
@@ -44,10 +42,20 @@ public class ConstructionProject {
     @JoinColumn(name = "contractor_id", referencedColumnName = "id")
     private User responsibleContractor;
 
+    public void addResponsibleContractor(User user){
+        this.responsibleContractor = user;
+        users.add(user);
+    }
+
 
     @OneToOne
     @JoinColumn(name = "supervision_id", referencedColumnName = "id")
     private User responsibleSupervision;
+
+    public void addResponsibleSupervision(User user){
+        this.responsibleSupervision = user;
+        users.add(user);
+    }
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -55,5 +63,5 @@ public class ConstructionProject {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
 }
