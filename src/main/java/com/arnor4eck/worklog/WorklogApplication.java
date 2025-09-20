@@ -64,8 +64,8 @@ public class WorklogApplication {
 				p.setObject(project1);
 				p.setAuthor(user1);
 			});
-			postRepository.saveAll(posts);
 
+			postRepository.saveAll(posts);
 		};
 	}
 }
