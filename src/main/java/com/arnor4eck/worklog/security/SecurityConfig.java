@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,11 +48,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http.authorizeHttpRequests(auth -> {
-                auth.requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/objects/**").authenticated()
-                        .requestMatchers("/", "/**", "/authorization").permitAll();
-        }).csrf(CsrfConfigurer::disable)
-                .sessionManagement(AbstractHttpConfigurer::disable)
+                    auth.requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/", "/**", "/authorization").permitAll()
+                            .anyRequest().authenticated();
+        }).csrf(CsrfConfigurer::disable) // отключение CSRF
+                .formLogin(AbstractHttpConfigurer::disable) // нет формы
+                .httpBasic(AbstractHttpConfigurer::disable) // нет basic auth
+                .sessionManagement(session -> {
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                }) // отключение сессий
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
