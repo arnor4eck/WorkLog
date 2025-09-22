@@ -1,5 +1,6 @@
 package com.arnor4eck.worklog.construction_project;
 
+import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
 import com.arnor4eck.worklog.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,18 +25,14 @@ public class ConstructionProject {
     @Column(nullable = false)
     private String description;
 
-    @Column(name = "coordinate_x", nullable = false)
-    private Double coordinateX;
+    @ElementCollection
+    @CollectionTable(name = "project_points", joinColumns = @JoinColumn(name = "project_id"))
+    @OrderColumn(name = "point_order")
+    private List<Coordinates> coordinates;
 
-    @Column(name = "coordinate_y", nullable = false)
-    private Double coordinateY;
-
-    public ConstructionProject(String name, String description,
-                               double coordinateX, double coordinateY){
+    public ConstructionProject(String name, String description){
         this.name = name;
         this.description = description;
-        this.coordinateX = coordinateX;
-        this.coordinateY = coordinateY;
     }
 
     @OneToOne

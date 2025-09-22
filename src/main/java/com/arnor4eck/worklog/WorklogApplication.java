@@ -2,6 +2,7 @@ package com.arnor4eck.worklog;
 
 import com.arnor4eck.worklog.construction_project.ConstructionProject;
 import com.arnor4eck.worklog.construction_project.ConstructionProjectRepository;
+import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
 import com.arnor4eck.worklog.post.Post;
 import com.arnor4eck.worklog.post.PostRepository;
 import com.arnor4eck.worklog.user.Role;
@@ -55,18 +56,21 @@ public class WorklogApplication {
 
 			userRepository.saveAll(users);
 
-			ConstructionProject project = new ConstructionProject("project_1", "test project",
-					24.5734563746, 56.5617325627);
+			ConstructionProject project = new ConstructionProject("project_1", "test project");
 
-			ConstructionProject project2 = new ConstructionProject("project_2", "test2 project",
-					24.5734563746, 56.5617325627);
+			ConstructionProject project2 = new ConstructionProject("project_2", "test2 project");
 
+			Coordinates coord1 = new Coordinates(24.5734563746, 56.5617325627);
+			Coordinates coord2 = new Coordinates(434.5734563746, 436.5617325627);
+
+			project.setCoordinates(List.of(coord1, coord2));
 
 			project.getUsers().add(users.get(0));
 			project.addResponsibleSupervision(users.get(1));
 			project.addResponsibleContractor(users.get(2));
 
 			constructionProjectRepository.saveAll(List.of(project, project2));
+
 
 			List<Post> posts = List.of(new Post("escape the backrooms", "biba"),
 					new Post("escape the backrooms2", "biba2"));
