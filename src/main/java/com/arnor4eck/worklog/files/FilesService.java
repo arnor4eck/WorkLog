@@ -7,7 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.*;
 
-@Slf4j
 @Service
 public class FilesService {
 
@@ -20,11 +19,11 @@ public class FilesService {
 
     public void saveFile(MultipartFile file, String path) throws FileAlreadyExistsException {
         Path curPath = Paths.get(path);
+
         if(Files.exists(curPath))
             throw new FileAlreadyExistsException("Файл уже существует");
 
         try {
-            log.info(curPath.getParent().toString());
             Files.createDirectories(curPath.getParent());
             Files.write(curPath, file.getBytes());
         } catch (IOException e) {

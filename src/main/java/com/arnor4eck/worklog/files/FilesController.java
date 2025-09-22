@@ -1,5 +1,6 @@
 package com.arnor4eck.worklog.files;
 
+import com.arnor4eck.worklog.utils.ExceptionResponse;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +25,17 @@ public class FilesController {
     private FilesService filesService;
 
     @PostMapping
-    public ResponseEntity<String> uploadFile(@RequestParam("file")MultipartFile file){
+    public ResponseEntity<ExceptionResponse> uploadFile(@RequestParam("file")MultipartFile file){
         try{
             String path = filesService.createPath(file, 0,0);
             filesService.saveFile(file, path);
-            return new ResponseEntity<>(path, HttpStatus.CREATED);
+
+            log.info("file {} was uploaded", path);
+            return new ResponseEntity<>(new ExceptionResponse(path),
+                    HttpStatus.CREATED);
         }catch (FileAlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ExceptionResponse(e.getMessage()),
+                    HttpStatus.BAD_REQUEST);
         }
 
     }
