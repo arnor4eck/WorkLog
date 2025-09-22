@@ -48,8 +48,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http.authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
-                            .requestMatchers("/", "/**", "/authorization").permitAll()
+                    auth.requestMatchers("/auth/**").permitAll()
+                            .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                             .anyRequest().authenticated();
         }).csrf(CsrfConfigurer::disable) // отключение CSRF
                 .formLogin(AbstractHttpConfigurer::disable) // нет формы

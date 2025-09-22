@@ -33,5 +33,3 @@
 ## Структура базы данных
 
 [Ссылка на dbdiagram](https://dbdiagram.io/d/WorkLog-67dc537875d75cc844dea298)
-
-![alt text](https://sun9-85.userapi.com/s/v1/if2/kwEtw5C7oIet4gShEUum2Ykrkib7RN4zyNqk4CIudGgtF9R5mbbnNvV-kwDYR3aa0I47sME8SYscQj0kQ9-TzvAf.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x107,240x160,360x240,480x320,540x360,640x426,720x480,1080x720,1280x853,1313x875&from=bu&cs=1313x0)
