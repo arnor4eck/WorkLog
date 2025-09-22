@@ -1,13 +1,17 @@
 package com.arnor4eck.worklog.construction_project;
 
+import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
+import com.arnor4eck.worklog.construction_project.request.CreateObjectRequest;
 import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,5 +29,29 @@ public class ConstructionProjectService {
                 .findByUsersId(currentUser.getId()).stream()
                 .map(ConstructionProjectDTO::formConstructionProject)
                 .toList();
+    }
+
+    public void createObject(CreateObjectRequest request){
+        constructionProjectRepository.save(
+                ConstructionProject.builder()
+                        .name(request.getName())
+                        .description(request.getDescription())
+                        .responsibleContractor(userRepository.findById(request.getContractor()).orElseThrow(() -> new UsernameNotFoundException("Пользователя с id %d не существует".formatted(request.getContractor()))))
+                        .responsibleSupervision(userRepository.findById(request.getSupervision()).orElseThrow(() -> new UsernameNotFoundException("Пользователя с id %d не существует".formatted(request.getSupervision()))))
+                        .coordinates(
+                                request.getCoordinates().stream()
+                                        .map(c -> new Coordinates(c.getFirst(), c.getLast()))
+                                        .toList()
+                        )
+                        .users(
+                                request.getUsers().stream()
+                                        .map(n ->
+                                                userRepository.findById(n).orElseThrow(
+                                                        () -> new UsernameNotFoundException("Пользователя с id %d не существует".formatted(n))))
+                                        .collect(Collectors.toSet())
+                        )
+
+                        .build()
+        );
     }
 }

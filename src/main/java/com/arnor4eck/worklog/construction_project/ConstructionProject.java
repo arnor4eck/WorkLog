@@ -4,6 +4,7 @@ import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
 import com.arnor4eck.worklog.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ConstructionProject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
