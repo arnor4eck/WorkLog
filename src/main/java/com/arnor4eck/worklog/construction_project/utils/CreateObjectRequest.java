@@ -1,4 +1,4 @@
-package com.arnor4eck.worklog.construction_project.request;
+package com.arnor4eck.worklog.construction_project.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

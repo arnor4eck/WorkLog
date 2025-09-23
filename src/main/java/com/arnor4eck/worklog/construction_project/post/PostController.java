@@ -1,10 +1,9 @@
-package com.arnor4eck.worklog.post;
+package com.arnor4eck.worklog.construction_project.post;
 
+import com.arnor4eck.worklog.construction_project.post.request.CreatePostRequest;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "posts/")
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
     private final PostRepository postRepository;
+
+    private final PostService postService;
 
     @GetMapping
     public Iterable<Post> getAll(){

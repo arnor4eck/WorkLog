@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface ConstructionProjectRepository extends CrudRepository<ConstructionProject, Long> {
     List<ConstructionProject> findByUsersId(Long userId);
+    boolean existsByName(String name);
 }

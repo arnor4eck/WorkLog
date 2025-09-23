@@ -1,4 +1,4 @@
-package com.arnor4eck.worklog.files;
+package com.arnor4eck.worklog.construction_project.post.files;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

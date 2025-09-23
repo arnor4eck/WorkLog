@@ -3,8 +3,8 @@ package com.arnor4eck.worklog;
 import com.arnor4eck.worklog.construction_project.ConstructionProject;
 import com.arnor4eck.worklog.construction_project.ConstructionProjectRepository;
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
-import com.arnor4eck.worklog.post.Post;
-import com.arnor4eck.worklog.post.PostRepository;
+import com.arnor4eck.worklog.construction_project.post.Post;
+import com.arnor4eck.worklog.construction_project.post.PostRepository;
 import com.arnor4eck.worklog.user.Role;
 import com.arnor4eck.worklog.user.RoleRepository;
 import com.arnor4eck.worklog.user.User;
@@ -41,7 +41,7 @@ public class WorklogApplication {
 		return args -> {
 			List<Role> roles = List.of(new Role("ROLE_CONTRACTOR"), new Role("ROLE_SUPERVISION"),
 					new Role("ROLE_INSPECTOR"), new Role("ROLE_DEVELOPER"),
-					new Role("ROLE_ADMIN"), new Role("ROLE_WORKER"));
+					new Role("ROLE_ADMIN"));
 
 			roleRepository.saveAll(roles);
 

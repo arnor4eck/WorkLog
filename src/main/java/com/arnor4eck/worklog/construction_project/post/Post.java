@@ -1,9 +1,10 @@
-package com.arnor4eck.worklog.post;
+package com.arnor4eck.worklog.construction_project.post;
 
 import com.arnor4eck.worklog.construction_project.ConstructionProject;
 import com.arnor4eck.worklog.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,8 @@
 package com.arnor4eck.worklog.construction_project;
 
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
-import com.arnor4eck.worklog.construction_project.request.CreateObjectRequest;
+import com.arnor4eck.worklog.construction_project.utils.CreateObjectRequest;
+import com.arnor4eck.worklog.construction_project.utils.ProjectAlreadyExistsException;
 import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,8 @@ public class ConstructionProjectService {
     }
 
     public void createObject(CreateObjectRequest request){
+        if(constructionProjectRepository.existsByName(request.getName()))
+            throw new ProjectAlreadyExistsException("Объект с названием '%s' уже существует.".formatted(request.getName()));
         constructionProjectRepository.save(
                 ConstructionProject.builder()
                         .name(request.getName())
@@ -41,17 +44,13 @@ public class ConstructionProjectService {
                         .coordinates(
                                 request.getCoordinates().stream()
                                         .map(c -> new Coordinates(c.getFirst(), c.getLast()))
-                                        .toList()
-                        )
+                                        .toList())
                         .users(
                                 request.getUsers().stream()
                                         .map(n ->
                                                 userRepository.findById(n).orElseThrow(
                                                         () -> new UsernameNotFoundException("Пользователя с id %d не существует".formatted(n))))
-                                        .collect(Collectors.toSet())
-                        )
-
-                        .build()
-        );
+                                        .collect(Collectors.toSet()))
+                        .build());
     }
 }
