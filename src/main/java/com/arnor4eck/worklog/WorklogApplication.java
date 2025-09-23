@@ -45,14 +45,18 @@ public class WorklogApplication {
 
 			roleRepository.saveAll(roles);
 
-			List<User> users = List.of(new User("vladi52@ngg.com", "Прораб",
+			List<User> users = List.of(
+					new User("vladi52@ngg.com", "Прораб",
 					passwordEncoder.encode("password"), "vladi",
 					List.of(roles.getLast())),
 					new User("bere@mail.ru", "застройщик",
 							passwordEncoder.encode("password"), "berenby",
 							List.of(roles.get(3))),
 					new User("kura@jam.com", "Технический контроль",
-							passwordEncoder.encode("password"), "vladi", List.of(roles.get(1))));
+							passwordEncoder.encode("password"), "vladi", List.of(roles.get(1))),
+					new User("kika@mail.ru", "отец",
+							passwordEncoder.encode("password"), "kika",
+							roles));
 
 			userRepository.saveAll(users);
 

@@ -2,6 +2,7 @@ package com.arnor4eck.worklog.construction_project;
 
 import com.arnor4eck.worklog.construction_project.post.PostService;
 import com.arnor4eck.worklog.construction_project.post.request.CreatePostRequest;
+import com.arnor4eck.worklog.construction_project.utils.ConstructionProjectDTO;
 import com.arnor4eck.worklog.construction_project.utils.CreateObjectRequest;
 import com.arnor4eck.worklog.construction_project.utils.ProjectAlreadyExistsException;
 import com.arnor4eck.worklog.utils.ExceptionResponse;
@@ -28,6 +29,12 @@ public class ConstructionProjectController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createObject(@RequestBody CreateObjectRequest request){
         constructionProjectService.createObject(request);
+    }
+
+    @GetMapping("{id}/")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ConstructionProjectDTO getProject(@PathVariable("id") long objectId){
+        return constructionProjectService.getObject(objectId);
     }
 
     @PostMapping("{id}/create_post/")

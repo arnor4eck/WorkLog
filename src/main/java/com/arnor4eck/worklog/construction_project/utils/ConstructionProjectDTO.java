@@ -1,5 +1,6 @@
-package com.arnor4eck.worklog.construction_project;
+package com.arnor4eck.worklog.construction_project.utils;
 
+import com.arnor4eck.worklog.construction_project.ConstructionProject;
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
 import com.arnor4eck.worklog.user.UserDTO;
 import lombok.Builder;

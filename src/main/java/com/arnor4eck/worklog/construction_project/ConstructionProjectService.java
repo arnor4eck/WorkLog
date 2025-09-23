@@ -1,12 +1,15 @@
 package com.arnor4eck.worklog.construction_project;
 
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
+import com.arnor4eck.worklog.construction_project.utils.ConstructionProjectDTO;
 import com.arnor4eck.worklog.construction_project.utils.CreateObjectRequest;
 import com.arnor4eck.worklog.construction_project.utils.ProjectAlreadyExistsException;
+import com.arnor4eck.worklog.construction_project.utils.ProjectNotFoundException;
 import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,18 @@ public class ConstructionProjectService {
                 .findByUsersId(currentUser.getId()).stream()
                 .map(ConstructionProjectDTO::formConstructionProject)
                 .toList();
+    }
+
+    public ConstructionProjectDTO getObject(long id){
+        ConstructionProject object = constructionProjectRepository.findById(id)
+                .orElseThrow(() -> new ProjectNotFoundException("Полигона с id '%d' не существует".formatted(id)));
+
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(!object.getUsers().contains(userRepository.findByEmail(email)))
+            throw new AccessDeniedException("У вас нет доступа к этому ресурсу.");
+
+        return ConstructionProjectDTO.formConstructionProject(object);
     }
 
     public void createObject(CreateObjectRequest request){
