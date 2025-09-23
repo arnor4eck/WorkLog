@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -30,6 +32,15 @@ public class Post {
 
     @Column(nullable = false)
     private String content;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "post_files",
+            joinColumns = @JoinColumn(name = "post_id")
+    )
+    @Column(name = "file_path")
+    @Builder.Default
+    private List<String> files = new ArrayList<>();
 
     public Post(String title, String content){
         this.title = title;

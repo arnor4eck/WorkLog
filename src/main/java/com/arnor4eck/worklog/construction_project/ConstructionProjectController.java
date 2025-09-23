@@ -8,9 +8,13 @@ import com.arnor4eck.worklog.construction_project.utils.ProjectAlreadyExistsExce
 import com.arnor4eck.worklog.utils.ExceptionResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,15 +41,21 @@ public class ConstructionProjectController {
         return constructionProjectService.getObject(objectId);
     }
 
-    @PostMapping("{id}/create_post/")
+    @PostMapping(path = "{id}/create_post/")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPost(@PathVariable("id") Long objectId, @RequestBody CreatePostRequest request){
+    public void createPost(@PathVariable("id") Long objectId, @RequestParam String title,
+                           @RequestParam String content,
+                           @RequestParam Long author,
+                           @RequestParam(required = false) List<MultipartFile> files) throws FileAlreadyExistsException {
+
+        CreatePostRequest request = new CreatePostRequest(title, content,
+                author, files == null ? new ArrayList<>() : files);
+
         postService.createPost(objectId, request);
     }
 
-
-    @ExceptionHandler(ProjectAlreadyExistsException.class)
-    public ResponseEntity<ExceptionResponse> projectAlreadyExists(ProjectAlreadyExistsException exception){
+    @ExceptionHandler({ProjectAlreadyExistsException.class, FileAlreadyExistsException.class})
+    public ResponseEntity<ExceptionResponse> AlreadyExists(Exception exception){
         return new ResponseEntity<>(new ExceptionResponse(exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

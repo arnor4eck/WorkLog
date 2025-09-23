@@ -10,7 +10,7 @@ import java.nio.file.*;
 @Service
 public class FilesService {
 
-    public String createPath(MultipartFile file, int objectId, int postId){
+    public String createPath(MultipartFile file, long objectId, long postId){
         String sep = FileSystems.getDefault().getSeparator();
         return String.join(sep, "src", "main",
                         "resources", String.format("project_%d", objectId),

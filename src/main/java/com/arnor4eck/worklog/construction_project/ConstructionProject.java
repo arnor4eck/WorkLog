@@ -46,7 +46,6 @@ public class ConstructionProject {
         users.add(user);
     }
 
-
     @OneToOne
     @JoinColumn(name = "supervision_id", referencedColumnName = "id")
     private User responsibleSupervision;
@@ -62,5 +61,6 @@ public class ConstructionProject {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+
     private Set<User> users = new HashSet<>();
 }

@@ -100,13 +100,14 @@
 
 ### Создание поста
 
-- `POST /objects/{id}/create_post/`
+- `POST /objects/{object_id}/create_post/`
 - Создает пост, привязанный к конкретному полигону
 ```json
 {
     "title": "goooooool",
     "content": "gfejwhbgkjsebgkusehg",
-    "author": 1
+    "author": 1,
+    "files": []
 }
 ```
 
