@@ -71,6 +71,32 @@
 - `GET /objects/{id}/`
 - Получение объекта по ID
 - Нельзя получить, если пользователь не прикреплен к нему
+```json
+{
+    "name": "project_1",
+    "description": "test project",
+    "coordinates": [
+        {
+            "x": 24.5734563746,
+            "y": 56.5617325627
+        },
+        {
+            "x": 434.5734563746,
+            "y": 436.5617325627
+        }
+    ],
+    "responsibleContractor": {
+        "username": "vladi",
+        "position": "Технический контроль",
+        "email": "kura@jam.com"
+    },
+    "responsibleSupervision": {
+        "username": "berenby",
+        "position": "застройщик",
+        "email": "bere@mail.ru"
+    }
+}
+```
 
 ### Создание поста
 
