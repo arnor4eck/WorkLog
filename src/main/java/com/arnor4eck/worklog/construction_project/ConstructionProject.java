@@ -35,6 +35,7 @@ public class ConstructionProject {
     public ConstructionProject(String name, String description){
         this.name = name;
         this.description = description;
+        users = new HashSet<>();
     }
 
     @OneToOne
@@ -61,6 +62,6 @@ public class ConstructionProject {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-
+    @Builder.Default
     private Set<User> users = new HashSet<>();
 }
