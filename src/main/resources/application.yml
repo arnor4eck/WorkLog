@@ -4,6 +4,15 @@ spring:
   datasource:
     generate-unique-name: false
     name: worklog
+    url: jdbc:postgresql://127.0.0.1:5432/worklog
+    username: user
+    password: password735812
+  jpa:
+    hibernate:
+      ddl-auto: create
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 logging:
   level:

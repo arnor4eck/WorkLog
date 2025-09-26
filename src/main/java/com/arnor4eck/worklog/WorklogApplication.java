@@ -47,8 +47,8 @@ public class WorklogApplication {
 
 			List<User> users = List.of(
 					new User("vladi52@ngg.com", "Прораб",
-					passwordEncoder.encode("password"), "vladi",
-					List.of(roles.getLast())),
+							passwordEncoder.encode("password"), "vladi",
+							List.of(roles.getLast())),
 					new User("bere@mail.ru", "застройщик",
 							passwordEncoder.encode("password"), "berenby",
 							List.of(roles.get(3))),
@@ -74,7 +74,6 @@ public class WorklogApplication {
 			project.addResponsibleContractor(users.get(2));
 
 			constructionProjectRepository.saveAll(List.of(project, project2));
-
 
 			List<Post> posts = List.of(new Post("escape the backrooms", "biba"),
 					new Post("escape the backrooms2", "biba2"));
