@@ -1,5 +1,7 @@
 package com.arnor4eck.worklog.security;
 
+import com.arnor4eck.worklog.security.authorization.jwt.JwtAccessDeniedHandler;
+import com.arnor4eck.worklog.security.authorization.jwt.JwtAuthenticationEntryPoint;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtRequestFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -29,6 +32,10 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
+
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     /**
@@ -54,13 +61,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Для разработки - разрешаем все
         configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 
-        // Важно для загрузки файлов
         configuration.setExposedHeaders(List.of("Content-Disposition", "Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -71,9 +76,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        return http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        return http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .exceptionHandling(handler -> {
+                    handler.accessDeniedHandler(jwtAccessDeniedHandler)
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint);
+                })
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/auth/**").permitAll()
+                    auth.requestMatchers("/authhh/**").permitAll()
                             .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                             .anyRequest().authenticated();
         }).csrf(CsrfConfigurer::disable) // отключение CSRF
