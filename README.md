@@ -66,6 +66,40 @@
 }
 ```
 
+### Получение объектов, к которым привязан пользователь
+
+- `GET /objects/my_objects/`
+- Возвращает все объекты, к которым привязан пользователь
+```json
+[
+  {
+    "id": 1,
+    "name": "project_1",
+    "description": "test project",
+    "coordinates": [
+      {
+        "x": 24.5734563746,
+        "y": 56.5617325627
+      },
+      {
+        "x": 434.5734563746,
+        "y": 436.5617325627
+      }
+    ],
+    "responsibleContractor": {
+      "username": "vladi",
+      "position": "Технический контроль",
+      "email": "kura@jam.com"
+    },
+    "responsibleSupervision": {
+      "username": "berenby",
+      "position": "застройщик",
+      "email": "bere@mail.ru"
+    }
+  }
+]
+```
+
 ### Получение объекта по ID
 
 - `GET /objects/{id}/`
