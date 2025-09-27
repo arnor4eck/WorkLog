@@ -35,10 +35,11 @@ public class ConstructionProject {
     public ConstructionProject(String name, String description){
         this.name = name;
         this.description = description;
+        users = new HashSet<>();
     }
 
-    @OneToOne
-    @JoinColumn(name = "contractor_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contractor_id")
     private User responsibleContractor;
 
     public void addResponsibleContractor(User user){
@@ -46,8 +47,8 @@ public class ConstructionProject {
         users.add(user);
     }
 
-    @OneToOne
-    @JoinColumn(name = "supervision_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supervision_id")
     private User responsibleSupervision;
 
     public void addResponsibleSupervision(User user){
@@ -61,6 +62,6 @@ public class ConstructionProject {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-
+    @Builder.Default
     private Set<User> users = new HashSet<>();
 }
