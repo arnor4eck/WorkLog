@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystemException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class PostService {
 
     private final ConstructionProjectRepository constructionProjectRepository;
 
-    public void createPost(Long objectId, CreatePostRequest request) throws FileAlreadyExistsException {
+    public void createPost(Long objectId, CreatePostRequest request) throws FileSystemException {
 
         Post post = postRepository.save(Post.builder()
                 .title(request.getTitle())

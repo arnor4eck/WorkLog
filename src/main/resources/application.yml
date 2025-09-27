@@ -22,3 +22,6 @@ logging:
 jwt:
   secret: labububabyj0hnprostoesh1k1abububabyjohnprost0eshiklabububabyj0hnprostoeshik
   lifetime: 1200000
+
+api:
+  giga-chat-api: ${GIGACHAT_API}

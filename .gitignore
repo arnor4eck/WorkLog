@@ -64,3 +64,4 @@ gradle-app.setting
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+.env

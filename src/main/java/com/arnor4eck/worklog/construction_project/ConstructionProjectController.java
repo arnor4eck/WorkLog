@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystemException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class ConstructionProjectController {
     public void createPost(@PathVariable("id") Long objectId, @RequestParam String title,
                            @RequestParam String content,
                            @RequestParam Long author,
-                           @RequestParam(required = false) List<MultipartFile> files) throws FileAlreadyExistsException {
+                           @RequestParam(required = false) List<MultipartFile> files) throws FileSystemException {
 
         CreatePostRequest request = new CreatePostRequest(title, content,
                 author, files == null ? new ArrayList<>() : files);
@@ -54,7 +55,7 @@ public class ConstructionProjectController {
         postService.createPost(objectId, request);
     }
 
-    @ExceptionHandler({ProjectAlreadyExistsException.class, FileAlreadyExistsException.class})
+    @ExceptionHandler({ProjectAlreadyExistsException.class, FileSystemException.class})
     public ResponseEntity<ExceptionResponse> AlreadyExists(Exception exception){
         return new ResponseEntity<>(new ExceptionResponse(exception.getMessage()), HttpStatus.BAD_REQUEST);
     }

@@ -10,6 +10,7 @@ import com.arnor4eck.worklog.user.RoleRepository;
 import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,7 +33,8 @@ public class WorklogApplication {
 
 	private final PasswordEncoder passwordEncoder;
 
-	public static void main(String[] args) {
+
+    public static void main(String[] args) {
 		SpringApplication.run(WorklogApplication.class, args);
 	}
 

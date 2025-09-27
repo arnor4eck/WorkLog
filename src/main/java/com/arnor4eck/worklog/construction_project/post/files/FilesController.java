@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystemException;
 
 @RestController
 @RequestMapping("upload/")
@@ -23,13 +24,14 @@ public class FilesController {
     @PostMapping
     public ResponseEntity<ExceptionResponse> uploadFile(@RequestParam("file")MultipartFile file){
         try{
+
             String path = filesService.createPath(file, 0,0);
             filesService.saveFile(file, path);
 
             log.info("file {} was uploaded", path);
             return new ResponseEntity<>(new ExceptionResponse(path),
                     HttpStatus.CREATED);
-        }catch (FileAlreadyExistsException e) {
+        }catch (FileSystemException e) {
             return new ResponseEntity<>(new ExceptionResponse(e.getMessage()),
                     HttpStatus.BAD_REQUEST);
         }
