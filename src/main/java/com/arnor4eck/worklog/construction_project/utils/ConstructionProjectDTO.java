@@ -12,6 +12,8 @@ import java.util.List;
 @Builder
 public class ConstructionProjectDTO {
 
+    private final Long id;
+
     private final String name;
 
     private final String description;
@@ -24,6 +26,7 @@ public class ConstructionProjectDTO {
 
     public static ConstructionProjectDTO formConstructionProject(ConstructionProject constructionProject){
         return ConstructionProjectDTO.builder()
+                .id(constructionProject.getId())
                 .name(constructionProject.getName())
                 .description(constructionProject.getDescription())
                 .coordinates(constructionProject.getCoordinates())
