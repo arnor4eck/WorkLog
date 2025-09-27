@@ -21,4 +21,4 @@ logging:
 
 jwt:
   secret: labububabyj0hnprostoesh1k1abububabyjohnprost0eshiklabububabyj0hnprostoeshik
-  lifetime: 300000
+  lifetime: 1200000
