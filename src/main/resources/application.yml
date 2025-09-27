@@ -5,11 +5,11 @@ spring:
     generate-unique-name: false
     name: worklog
     url: jdbc:postgresql://127.0.0.1:5432/worklog
-    username: user
-    password: password735812
+    username: postgres
+    password: postgres
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
       database-platform: org.hibernate.dialect.PostgreSQLDialect
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
