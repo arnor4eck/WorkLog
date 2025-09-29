@@ -83,7 +83,7 @@ public class SecurityConfig {
                     .authenticationEntryPoint(jwtAuthenticationEntryPoint);
                 })
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/authhh/**").permitAll()
+                    auth.requestMatchers("/auth/**").permitAll()
                             .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                             .anyRequest().authenticated();
         }).csrf(CsrfConfigurer::disable) // отключение CSRF

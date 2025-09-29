@@ -52,6 +52,7 @@
 
 - `POST /objects/`
 - Создает новый полигон
+
 ```json
 {
   "name": "ЖК Комфорт",
@@ -70,6 +71,7 @@
 
 - `GET /objects/my_objects/`
 - Возвращает все объекты, к которым привязан пользователь
+
 ```json
 [
   {
@@ -105,8 +107,10 @@
 - `GET /objects/{id}/`
 - Получение объекта по ID
 - Нельзя получить, если пользователь не прикреплен к нему
+
 ```json
 {
+    "id": 1,
     "name": "project_1",
     "description": "test project",
     "coordinates": [
@@ -134,8 +138,9 @@
 
 ### Создание поста
 
-- `POST /objects/{object_id}/create_post/`
+- `POST /objects/{object_id}/create_post/?title=title&content=content&author=author&files=files`
 - Создает пост, привязанный к конкретному полигону
+
 ```json
 {
     "title": "goooooool",
@@ -144,6 +149,11 @@
     "files": []
 }
 ```
+
+### Получение файла из поста
+
+- `GET /objects/{object_id}/{post_id}/file/?file_name=name`
+- Возвращает файл поста
 
 ## Структура базы данных
 
