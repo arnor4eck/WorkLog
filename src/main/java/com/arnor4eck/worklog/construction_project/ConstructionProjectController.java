@@ -59,27 +59,23 @@ public class ConstructionProjectController {
                            @RequestParam(required = false) List<MultipartFile> files) throws FileAlreadyExistsException {
 
         postService.createPost(objectId, new CreatePostRequest(title, content,
-                author, files == null ? new ArrayList<>() : files));
+                author, files == null || files.isEmpty() ? new ArrayList<>() : files));
     }
 
-    @GetMapping(path="/{object_id}/{post_id}/")
+    @GetMapping(path="{object_id}/{post_id}/file/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     public ResponseEntity<Resource> getFile(@PathVariable("object_id") Long objectId,
                                             @PathVariable("post_id") Long postId,
-                                            @RequestParam("file_name") String fileName){
-        try {
-            Path file = filesService.findFile(objectId,postId, fileName);
+                                            @RequestParam("file_name") String fileName) throws IOException {
+        Path file = filesService.findFile(objectId,postId, fileName);
 
-            return ResponseEntity.status(HttpStatus.FOUND)
-                    .contentType(MediaType.parseMediaType(
-                            filesService.determineContentType(
-                                    filesService.getPostfix(file.getFileName().toString()))))
-                    .header(HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + file.getFileName().toString() + "\"")
-                    .body(new FileSystemResource(file));
-        } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .contentType(MediaType.parseMediaType(
+                        filesService.determineContentType(
+                                filesService.getPostfix(file.getFileName().toString()))))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + file.getFileName().toString() + "\"")
+                .body(new FileSystemResource(file));
     }
 
     @ExceptionHandler({ProjectAlreadyExistsException.class, FileAlreadyExistsException.class})

@@ -22,7 +22,7 @@ public class FilesService {
     public Path findFile(long objectId, long postId, String fileName) throws IOException {
         return Files.list(Paths.get(this.createPath("", objectId, postId)))
                 .filter(f -> f.getFileName().toString().equals(fileName))
-                .findFirst().orElseThrow(FileNotFoundException::new);
+                .findFirst().orElseThrow(() -> new FileNotFoundException("Файл не найден."));
     }
 
     public String getPostfix(String fileName){
@@ -30,8 +30,7 @@ public class FilesService {
     }
 
     public String determineContentType(String filename) {
-        String extension = this.getPostfix(filename);
-        return switch (extension) {
+        return switch (this.getPostfix(filename)) {
             case ".pdf" -> "application/pdf";
             case ".jpg", "jpeg" -> "image/jpeg";
             case ".png" -> "image/png";
