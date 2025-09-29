@@ -107,6 +107,7 @@
 - Нельзя получить, если пользователь не прикреплен к нему
 ```json
 {
+    "id": 1,
     "name": "project_1",
     "description": "test project",
     "coordinates": [

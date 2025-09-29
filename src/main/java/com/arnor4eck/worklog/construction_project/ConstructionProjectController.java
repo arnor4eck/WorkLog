@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,12 +44,14 @@ public class ConstructionProjectController {
     }
 
     @GetMapping("{id}/")
+    @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ConstructionProjectDTO getProject(@PathVariable("id") long objectId){
         return constructionProjectService.getObject(objectId);
     }
 
     @PostMapping(path = "{id}/create_post/")
+    @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.CREATED)
     public void createPost(@PathVariable("id") Long objectId, @RequestParam String title,
                            @RequestParam String content,
@@ -60,6 +63,7 @@ public class ConstructionProjectController {
     }
 
     @GetMapping(path="/{object_id}/{post_id}/")
+    @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     public ResponseEntity<Resource> getFile(@PathVariable("object_id") Long objectId,
                                             @PathVariable("post_id") Long postId,
                                             @RequestParam("file_name") String fileName){
@@ -81,5 +85,10 @@ public class ConstructionProjectController {
     @ExceptionHandler({ProjectAlreadyExistsException.class, FileAlreadyExistsException.class})
     public ResponseEntity<ExceptionResponse> AlreadyExists(Exception exception){
         return new ResponseEntity<>(new ExceptionResponse(exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ExceptionResponse> IOE(IOException e){
+        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
