@@ -38,23 +38,4 @@ public class FilesController {
         }
 
     }
-
-    @GetMapping(path="/{object_id}/{post_id}/")
-    public ResponseEntity<Resource> getFile(@PathVariable("object_id") Long objectId,
-                                     @PathVariable("post_id") Long postId,
-                                     @RequestParam("file_name") String fileName){
-        try {
-            Path file = filesService.findFile(objectId,postId, fileName);
-
-            return ResponseEntity.status(HttpStatus.FOUND)
-                    .contentType(MediaType.parseMediaType(
-                            filesService.determineContentType(
-                                    filesService.getPostfix(file.getFileName().toString()))))
-                    .header(HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + file.getFileName().toString() + "\"")
-                    .body(new FileSystemResource(file));
-        } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 }
