@@ -11,11 +11,11 @@ import java.util.List;
 @Service
 public class FilesService {
 
-    public String createPath(MultipartFile file, long objectId, long postId){
+    public String createPath(String fileName, long objectId, long postId){
         String sep = FileSystems.getDefault().getSeparator();
         return String.join(sep, "src", "main",
                         "resources", String.format("project_%d", objectId),
-                        String.format("post_%d", postId), file.getOriginalFilename());
+                        String.format("post_%d", postId), fileName);
     }
 
     public String getPostfix(String fileName){
@@ -25,6 +25,11 @@ public class FilesService {
     public boolean acceptableFile(String fileName){
         return List.of(".doc", ".docx", ".pdf", ".txt", ".jpeg", ",png")
                 .contains(this.getPostfix(fileName));
+    }
+
+    public Path findFile(long objectId, long postId, String fileName) throws IOException {
+        return Files.list(Paths.get(this.createPath("", objectId, postId)))
+                .filter(f -> f.getFileName().toString().equals(fileName)).findFirst().orElseThrow();
     }
 
     public void saveFile(MultipartFile file, String path) throws FileSystemException {
