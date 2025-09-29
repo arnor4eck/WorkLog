@@ -10,6 +10,7 @@ import com.arnor4eck.worklog.user.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,15 @@ public class ConstructionProjectService {
 
     private final UserRepository userRepository;
 
+    public boolean hasAccess(Authentication auth, Long projectId){
+        String email = (String) auth.getPrincipal();
+
+        if(!constructionProjectRepository.projectContainsUser(projectId, email))
+            throw new AccessDeniedException("У вас нет доступа к этому ресурсу.");
+
+        return true;
+    }
+
     public List<ConstructionProjectDTO> getUserObjects(){
         User currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
@@ -38,11 +48,6 @@ public class ConstructionProjectService {
     public ConstructionProjectDTO getObject(long id){
         ConstructionProject object = constructionProjectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Полигона с id '%d' не существует".formatted(id)));
-
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if(!object.getUsers().contains(userRepository.findByEmail(email)))
-            throw new AccessDeniedException("У вас нет доступа к этому ресурсу.");
 
         return ConstructionProjectDTO.formConstructionProject(object);
     }
