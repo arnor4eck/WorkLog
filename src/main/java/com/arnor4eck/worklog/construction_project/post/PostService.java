@@ -40,7 +40,7 @@ public class PostService {
         List<String> files = new LinkedList<>();
 
         for(MultipartFile file : request.getFiles()){
-            filesService.saveFile(file, filesService.createPath(file, objectId, post.getId()));
+            filesService.saveFile(file, filesService.createPath(file.getOriginalFilename(), objectId, post.getId()));
             files.add(file.getOriginalFilename());
         }
         post.setFiles(files);

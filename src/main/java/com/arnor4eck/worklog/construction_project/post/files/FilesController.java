@@ -3,15 +3,18 @@ package com.arnor4eck.worklog.construction_project.post.files;
 import com.arnor4eck.worklog.utils.ExceptionResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Path;
 
 @RestController
 @RequestMapping("upload/")
@@ -23,7 +26,7 @@ public class FilesController {
     @PostMapping
     public ResponseEntity<ExceptionResponse> uploadFile(@RequestParam("file")MultipartFile file){
         try{
-            String path = filesService.createPath(file, 0,0);
+            String path = filesService.createPath(file.getOriginalFilename(), 0,0);
             filesService.saveFile(file, path);
 
             log.info("file {} was uploaded", path);
