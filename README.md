@@ -150,6 +150,28 @@
 }
 ```
 
+### Получение поста по ID
+
+- `GET /objects/{object_id}/{post_id}/`
+- Возвращает пост
+
+```json
+{
+    "id": 4,
+    "title": "gooooool",
+    "content": "rhgjrehgjrhjer",
+    "createdAt": "29/09/2025 [15:39]",
+    "files": [
+        "GigaChatAPI_com.arnor4eck_01998c49-00f6-71ba-99a3-0c67609adb5b_2025-09-01_2025-09-28.xlsx"
+    ],
+    "author": {
+        "username": "vladi",
+        "position": "Прораб",
+        "email": "vladi52@ngg.com"
+    }
+}
+```
+
 ### Получение файла из поста
 
 - `GET /objects/{object_id}/{post_id}/file/?file_name=name`

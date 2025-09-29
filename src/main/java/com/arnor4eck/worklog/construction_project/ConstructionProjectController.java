@@ -1,5 +1,6 @@
 package com.arnor4eck.worklog.construction_project;
 
+import com.arnor4eck.worklog.construction_project.post.utils.PostDTO;
 import com.arnor4eck.worklog.construction_project.post.PostService;
 import com.arnor4eck.worklog.construction_project.post.files.FilesService;
 import com.arnor4eck.worklog.construction_project.post.request.CreatePostRequest;
@@ -50,16 +51,24 @@ public class ConstructionProjectController {
         return constructionProjectService.getObject(objectId);
     }
 
-    @PostMapping(path = "{id}/create_post/")
+    @PostMapping(path = "{object_id}/create_post/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPost(@PathVariable("id") Long objectId, @RequestParam String title,
+    public void createPost(@PathVariable("object_id") Long objectId, @RequestParam String title,
                            @RequestParam String content,
                            @RequestParam Long author,
                            @RequestParam(required = false) List<MultipartFile> files) throws FileAlreadyExistsException {
 
         postService.createPost(objectId, new CreatePostRequest(title, content,
                 author, files == null || files.isEmpty() ? new ArrayList<>() : files));
+    }
+
+    @GetMapping(path = "{object_id}/{post_id}/")
+    @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
+    @ResponseStatus(HttpStatus.FOUND)
+    public PostDTO getPost(@PathVariable("object_id") Long objectId,
+                           @PathVariable("post_id") Long postId){
+        return postService.getPost(postId);
     }
 
     @GetMapping(path="{object_id}/{post_id}/file/")
