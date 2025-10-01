@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** Сущность для хранения координат объекта
+ * */
 @Embeddable
 @Data
 @NoArgsConstructor

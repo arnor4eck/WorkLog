@@ -15,12 +15,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
+/** Фильтр для JWT
+ * */
 @Component
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
+    /** @see JwtUtils
+     * */
     private final JwtUtils jwtUtils;
 
-
+    /** Прохождение через цепочку фильтров
+     * */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
