@@ -7,11 +7,26 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/** Репозиторий для полигонов
+ * @see ConstructionProject
+ * */
 @Repository
 public interface ConstructionProjectRepository extends CrudRepository<ConstructionProject, Long> {
+    /** Находит все полигоны, к которым прикреплен пользователь
+     * @param userId ID пользователя
+     * @return Список полигонов
+     * */
     List<ConstructionProject> findByUsersId(Long userId);
+
+    /** Проверяет, существует ли полигон по его имени
+     * @param name Название полигона
+     * */
     boolean existsByName(String name);
 
+    /** Проверяет, прикреплен ли пользователь к данному полигону
+     * @param projectId ID полигона
+     * @param email Электронная почта пользователя
+     * */
     @Query(value = "SELECT EXISTS(" +
             "SELECT 1 FROM project_users pu " +
             "JOIN users u ON u.id = pu.user_id " +

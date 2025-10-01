@@ -15,6 +15,9 @@ import java.nio.file.FileAlreadyExistsException;
 import java.util.LinkedList;
 import java.util.List;
 
+/** Сервис для постов
+ * @see Post
+ * */
 @Service
 @AllArgsConstructor
 public class PostService {
@@ -26,6 +29,14 @@ public class PostService {
 
     private final ConstructionProjectRepository constructionProjectRepository;
 
+    /** Создание поста
+     * @param objectId ID полигона
+     * @param request Запрос на создание поста
+     * @throws FileAlreadyExistsException Если файл с таким именем уже существует
+     * @throws UsernameNotFoundException Если пользователя с переданным ID не существует
+     * @throws ProjectNotFoundException Если полигона с переданным ID не существует
+     * @see FilesService#saveFile(MultipartFile, String)
+     * */
     public void createPost(Long objectId, CreatePostRequest request) throws FileAlreadyExistsException {
         Post post = postRepository.save(Post.builder()
                 .title(request.getTitle())
@@ -47,6 +58,11 @@ public class PostService {
         postRepository.save(post);
     }
 
+    /** Получение поста по ID
+     * @param postId ID поста
+     * @see PostDTO
+     * @throws ProjectNotFoundException Если полигона с переданным ID не существует
+     * */
     public PostDTO getPost(Long postId){
         return PostDTO.fromPost(this.postRepository.findById(postId)
                 .orElseThrow(() ->

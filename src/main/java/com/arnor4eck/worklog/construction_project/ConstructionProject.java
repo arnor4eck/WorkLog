@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.*;
 
+/** Сущность строительного полигона
+ * */
 @Entity
 @Table(name = "construction_projects")
 @Data
@@ -17,16 +19,25 @@ import java.util.*;
 @NoArgsConstructor
 @Builder
 public class ConstructionProject {
+    /** Уникальный идентификатор полигона. База данных генерирует автоматически при сохранении объекта.
+     * */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Название полигона
+     * */
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
+    /** Описание полигона
+     * */
     @Column(nullable = false)
     private String description;
 
+    /** Координаты, связанные с полигоном
+     * @see Coordinates
+     * */
     @ElementCollection
     @CollectionTable(name = "project_points", joinColumns = @JoinColumn(name = "project_id"))
     @OrderColumn(name = "point_order")
@@ -38,6 +49,9 @@ public class ConstructionProject {
         users = new HashSet<>();
     }
 
+    /** Ответственный пользователь, назначаемый от подрядчика
+     * @see User
+     * */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contractor_id")
     private User responsibleContractor;
@@ -47,6 +61,9 @@ public class ConstructionProject {
         users.add(user);
     }
 
+    /** Ответственный пользователь, назначаемый от технического надзора
+     * @see User
+     * */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supervision_id")
     private User responsibleSupervision;
@@ -56,6 +73,9 @@ public class ConstructionProject {
         users.add(user);
     }
 
+    /** Все пользователи, прикрепленные к объекту
+     * @see User
+     * */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "project_users",

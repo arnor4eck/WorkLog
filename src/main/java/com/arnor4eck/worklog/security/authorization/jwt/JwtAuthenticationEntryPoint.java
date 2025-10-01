@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-// 401 Unauthorized
+/** Обработчик неудачной авторизации {@code 401}
+ * */
 @Component
 @Slf4j
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {

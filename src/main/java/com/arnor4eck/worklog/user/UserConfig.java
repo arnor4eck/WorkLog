@@ -7,13 +7,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
+/** Настройки конфигурации пользователя
+ * */
 @Configuration
 public class UserConfig {
 
+    /** Поиск пользователя по email
+     * @see User
+     * @param repo {@link UserRepository}
+     * @throws UsernameNotFoundException
+     * @return Строка - email пользователя
+     * */
     @Bean
-    /*
-    * Поиск пользователя по email
-    * */
     public UserDetailsService userDetailsServiceEmail(UserRepository repo){
         return email -> Optional.ofNullable(repo.findByEmail(email))
                 .orElseThrow(() -> new UsernameNotFoundException(

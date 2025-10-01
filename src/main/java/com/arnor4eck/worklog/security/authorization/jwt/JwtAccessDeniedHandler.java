@@ -13,8 +13,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/** Обработчик неудачной аутентификации {@code 403}
+ * */
 @Component
-// 403 Forbidden
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {

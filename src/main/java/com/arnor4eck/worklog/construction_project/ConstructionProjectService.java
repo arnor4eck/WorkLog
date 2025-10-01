@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/** Сервис для полигонов
+ * @see ConstructionProject
+ * */
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -27,6 +30,11 @@ public class ConstructionProjectService {
 
     private final UserRepository userRepository;
 
+    /** Проверяет, есть ли у пользователя доступ к данному полигону
+     * @param projectId ID полигона
+     * @see ConstructionProjectRepository#projectContainsUser(Long, String)
+     * @throws AccessDeniedException В случае, если {@link ConstructionProjectRepository#projectContainsUser(Long, String)} возвращает false
+     * */
     public boolean hasAccess(Authentication auth, Long projectId){
         String email = (String) auth.getPrincipal();
 
@@ -36,15 +44,33 @@ public class ConstructionProjectService {
         return true;
     }
 
-    public List<ConstructionProjectDTO> getUserObjects(){
-        User currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-
+    /** Возвращает список полигонов пользователя по его ID
+     * @param userId ID пользователя
+     * @return Список объектов
+     * @see ConstructionProjectDTO
+     * */
+    public List<ConstructionProjectDTO> getUserObjects(long userId){
         return constructionProjectRepository
-                .findByUsersId(currentUser.getId()).stream()
+                .findByUsersId(userId).stream()
                 .map(ConstructionProjectDTO::formConstructionProject)
                 .toList();
     }
 
+    /** Возвращает список полигонов авторизированного пользователя
+     * @return Список объектов
+     * */
+    public List<ConstructionProjectDTO> getCurrentUserObjects(){
+        User currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        return this.getUserObjects(currentUser.getId());
+    }
+
+    /** Вовзвращает полигон по его ID
+     * @param id ID полигона
+     * @return Полигон
+     * @see ConstructionProjectDTO
+     * @throws ProjectNotFoundException Если не найден полигон
+     * */
     public ConstructionProjectDTO getObject(long id){
         ConstructionProject object = constructionProjectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Полигона с id '%d' не существует".formatted(id)));
@@ -52,6 +78,11 @@ public class ConstructionProjectService {
         return ConstructionProjectDTO.formConstructionProject(object);
     }
 
+    /** Создание полигона
+     * @param request Запрос на создание полигона
+     * @see CreateObjectRequest
+     * @throws ProjectAlreadyExistsException Если полигон с таким названием уже существует
+     * */
     public void createObject(CreateObjectRequest request){
         if(constructionProjectRepository.existsByName(request.getName()))
             throw new ProjectAlreadyExistsException("Объект с названием '%s' уже существует.".formatted(request.getName()));

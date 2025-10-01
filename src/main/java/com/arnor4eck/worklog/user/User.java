@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/** Пользователь, хранящийся в базе данных
+ * */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,15 +19,31 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
 
+    /** Уникальный идентификатор пользователя. База данных генерирует автоматически при сохранении объекта.
+     * */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Электронная почта пользователя
+     * */
     private String email;
+
+    /** Должность пользователя
+     * */
     private String position;
+
+    /** Пароль пользователя.
+     * @see com.arnor4eck.worklog.security.SecurityConfig#passwordEncoder()
+     * */
     private String password;
+
+    /** Имя пользователя в формате ФИО
+     * */
     private String username;
 
+    /** Конструктор со всеми параметрами
+     * */
     public User(String email, String position,
                 String password, String username,
                 List<Role> authorities){
@@ -36,6 +54,9 @@ public class User implements UserDetails {
         this.authorities = authorities;
     }
 
+    /** Список ролей пользователя
+     * @see Role
+     * */
     @ManyToMany
     @JoinTable(
             joinColumns = @JoinColumn(name = "user_id"),
@@ -43,6 +64,9 @@ public class User implements UserDetails {
     )
     private List<Role> authorities;
 
+    /** Переопределённый метод получения ролей пользователя
+     * @return пользовательские роли
+     * */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.authorities;

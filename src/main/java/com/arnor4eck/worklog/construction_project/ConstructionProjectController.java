@@ -25,6 +25,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Контроллер полигонов
+ * @see ConstructionProject
+ * @see ConstructionProjectDTO
+ * */
 @RestController
 @RequestMapping(path = "objects/")
 @AllArgsConstructor
@@ -33,24 +37,40 @@ public class ConstructionProjectController {
     private final PostService postService;
     private final FilesService filesService;
 
+    /** Получение всех полигонов авторизированного пользователя
+     * @see ConstructionProjectService#getCurrentUserObjects()
+     * */
     @GetMapping(path = "my_objects/")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public List<ConstructionProjectDTO> getUserObjects(){
-        return constructionProjectService.getUserObjects();
+        return constructionProjectService.getCurrentUserObjects();
     }
 
+    /** Создание полигона
+     * При успехе возвращает {@code 201}
+     * @see ConstructionProjectService#createObject(CreateObjectRequest)
+     * */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createObject(@RequestBody CreateObjectRequest request){
         constructionProjectService.createObject(request);
     }
 
+    /** Получение полигона по ID
+     * При успехе возвращает {@code 302}
+     * @see ConstructionProjectService#getObject(long)
+     * */
     @GetMapping("{id}/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.FOUND)
     public ConstructionProjectDTO getProject(@PathVariable("id") long objectId){
         return constructionProjectService.getObject(objectId);
     }
 
+    /** Создание поста
+     * При успехе возвращает {@code 201}
+     * @see PostService#createPost(Long, CreatePostRequest)
+     * */
     @PostMapping(path = "{object_id}/create_post/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.CREATED)
@@ -63,6 +83,10 @@ public class ConstructionProjectController {
                 author, files == null || files.isEmpty() ? new ArrayList<>() : files));
     }
 
+    /** Получение поста по ID
+     * При успехе возвращает {@code 302}
+     * @see PostService#getPost(Long)
+     * */
     @GetMapping(path = "{object_id}/{post_id}/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.FOUND)
@@ -71,6 +95,10 @@ public class ConstructionProjectController {
         return postService.getPost(postId);
     }
 
+    /** Получение прикрепленного к посту файлу
+     * При успехе возвращает {@code 302}
+     * @see FilesService#findFile(long, long, String)
+     * */
     @GetMapping(path="{object_id}/{post_id}/file/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     public ResponseEntity<Resource> getFile(@PathVariable("object_id") Long objectId,
@@ -87,11 +115,20 @@ public class ConstructionProjectController {
                 .body(new FileSystemResource(file));
     }
 
+    /** Обработчик ошибок группы "Уже существует"
+     * Возвращает сообщение ошибки и статус {@code 400}
+     * @see ProjectAlreadyExistsException
+     * @see FileAlreadyExistsException
+     * */
     @ExceptionHandler({ProjectAlreadyExistsException.class, FileAlreadyExistsException.class})
     public ResponseEntity<ExceptionResponse> AlreadyExists(Exception exception){
         return new ResponseEntity<>(new ExceptionResponse(exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    /** Обработчик ошибки IOException
+     * Возвращает сообщение ошибки и статус {@code 500}
+     * @see IOException
+     * */
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ExceptionResponse> IOE(IOException e){
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
