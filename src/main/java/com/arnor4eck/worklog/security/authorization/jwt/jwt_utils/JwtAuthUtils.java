@@ -1,4 +1,4 @@
-package com.arnor4eck.worklog.security.authorization.jwt;
+package com.arnor4eck.worklog.security.authorization.jwt.jwt_utils;
 
 import com.arnor4eck.worklog.user.User;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import java.util.*;
 /** Утилита для JWT
  * */
 @Component
-public class JwtUtils {
+public class JwtAuthUtils implements JwtUtils<User>{
     /** Секрет пользователя
      * */
     @Value("${jwt.secret}")
@@ -31,6 +31,7 @@ public class JwtUtils {
      * @param user Пользователь
      * @return Строка - токен
      * */
+    @Override
     public String generateToken(User user){
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
@@ -40,7 +41,7 @@ public class JwtUtils {
 
         return Jwts.builder()
                 .claims(claims) // полезная информация
-                .subject(user.getEmail()) //
+                .subject(user.getEmail())
                 .issuedAt(issued) // создание
                 .expiration(expired) // истечение
                 .signWith(key) // секрет
