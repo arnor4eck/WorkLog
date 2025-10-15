@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.*;
 
-/** Утилита для JWT
+/** Утилита для JWT авторизации
  * */
 @Component
 public class JwtAuthUtils implements JwtUtils<User>{

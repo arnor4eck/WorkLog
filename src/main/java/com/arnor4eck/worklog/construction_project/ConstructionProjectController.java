@@ -71,7 +71,7 @@ public class ConstructionProjectController {
      * При успехе возвращает {@code 201}
      * @see PostService#createPost(Long, CreatePostRequest)
      * */
-    @PostMapping(path = "{object_id}/create_post/")
+    @PostMapping(path = "/access/{object_id}/create_post/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.CREATED)
     public void createPost(@PathVariable("object_id") Long objectId, @RequestParam String title,

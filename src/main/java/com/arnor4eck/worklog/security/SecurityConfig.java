@@ -3,6 +3,7 @@ package com.arnor4eck.worklog.security;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtAccessDeniedHandler;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtAuthenticationEntryPoint;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtRequestFilter;
+import com.arnor4eck.worklog.security.authorization.jwt.JwtAccessFilter;
 import com.arnor4eck.worklog.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -39,6 +39,8 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    private final JwtAccessFilter jwtAccessFilter;
 
     /** Указание алгоритма шифрования пароля
      * */
@@ -92,7 +94,7 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/auth/**").permitAll()
-                            .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/qr/generate/").hasRole("ADMIN")
                             .anyRequest().authenticated();
         }).csrf(CsrfConfigurer::disable) // отключение CSRF
                 .formLogin(AbstractHttpConfigurer::disable) // нет формы
@@ -101,6 +103,7 @@ public class SecurityConfig {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 }) // отключение сессий
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtAccessFilter, JwtRequestFilter.class)
                 .build();
     }
 }

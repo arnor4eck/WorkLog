@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+/** Утилита для JWT QR-кода
+ * */
 @Component
 public class JwtAccessUtils implements JwtUtils<String>{
     /** Секрет пользователя
@@ -20,6 +22,8 @@ public class JwtAccessUtils implements JwtUtils<String>{
      * */
     private Long lifetime = 300000L;
 
+    /** Генерация токена
+     * */
     @Override
     public String generateToken(String object) {
         Date issued = new Date();
@@ -32,6 +36,8 @@ public class JwtAccessUtils implements JwtUtils<String>{
                 .compact();
     }
 
+    /** Проверка валидности токена
+     * */
     @Override
     public boolean validate(String token) {
         try {
