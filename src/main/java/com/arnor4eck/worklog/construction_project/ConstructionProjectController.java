@@ -140,6 +140,30 @@ public class ConstructionProjectController {
                 .body(new FileSystemResource(file));
     }
 
+    @PostMapping(path="{object_id}/works/")
+    @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void loadСompositionOfWorks(@PathVariable("object_id") Long objectId,
+                                 @RequestParam(required = true) MultipartFile file) throws IOException {
+        String pathToFile = filesService.createPathToObject(objectId) + File.separator + "works.pdf";
+        filesService.deleteFile(pathToFile);
+        filesService.saveFile(file, pathToFile);
+    }
+
+    @GetMapping(path="{object_id}/works/")
+    @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<Resource> getСompositionOfWorks(@PathVariable("object_id") Long objectId) throws IOException {
+        Path file = filesService.findFile(objectId, "works.pdf");
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .contentType(MediaType.parseMediaType(
+                        filesService.determineContentType(
+                                filesService.getPostfix(file.getFileName().toString()))))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + file.getFileName().toString() + "\"")
+                .body(new FileSystemResource(file));
+    }
+
     /** Обработчик ошибок группы "Уже существует"
      * Возвращает сообщение ошибки и статус {@code 400}
      * @see ProjectAlreadyExistsException

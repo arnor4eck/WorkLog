@@ -1,6 +1,7 @@
 package com.arnor4eck.worklog.construction_project.post.files;
 
 import com.arnor4eck.worklog.construction_project.post.PostService;
+import com.arnor4eck.worklog.construction_project.post.files.utils.FileNotFound;
 import com.arnor4eck.worklog.construction_project.post.utils.PostNotFoundException;
 import com.arnor4eck.worklog.construction_project.utils.ProjectNotFoundException;
 import lombok.AllArgsConstructor;
@@ -49,7 +50,7 @@ public class FilesService {
             throw new PostNotFoundException("Пост с id '%d' не найден.".formatted(postId));
         return Files.list(path)
                 .filter(f -> f.getFileName().toString().equals(fileName))
-                .findFirst().orElseThrow(() -> new FileNotFoundException("Файл не найден."));
+                .findFirst().orElseThrow(() -> new FileNotFound("Файл не найден."));
     }
 
     public Path findFile(long objectId, String fileName) throws IOException {
@@ -58,7 +59,7 @@ public class FilesService {
             throw new ProjectNotFoundException("Полигон с id '%d' не найден.".formatted(objectId));
         return Files.list(path)
                 .filter(f -> f.getFileName().toString().equals(fileName))
-                .findFirst().orElseThrow(() -> new FileNotFoundException("Файл не найден."));
+                .findFirst().orElseThrow(() -> new FileNotFound("Файл не найден."));
     }
 
     /** Возвращает расширение файла
