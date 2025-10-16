@@ -11,10 +11,7 @@ RUN gradle build --no-daemon -x test
 
 FROM eclipse-temurin:21-jre-alpine
 
-RUN apk update && apk add --no-cache \
-    tesseract-ocr \
-    tesseract-ocr-data-rus \
-    tesseract-ocr-data-eng
+RUN apk update && apk add --no-cache tesseract-ocr tesseract-ocr-data-rus tesseract-ocr-data-eng
 
 
 WORKDIR /app
