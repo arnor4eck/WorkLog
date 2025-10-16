@@ -1,6 +1,7 @@
 package com.arnor4eck.worklog.construction_project;
 
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
+import com.arnor4eck.worklog.construction_project.utils.ObjectStatus;
 import com.arnor4eck.worklog.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -72,6 +73,13 @@ public class ConstructionProject {
         this.responsibleSupervision = user;
         users.add(user);
     }
+
+    /** Статус объекта
+     * @see ObjectStatus
+     * */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private ObjectStatus status;
 
     /** Все пользователи, прикрепленные к объекту
      * @see User
