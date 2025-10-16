@@ -84,8 +84,19 @@ public class ConstructionProjectController {
                 author, files == null || files.isEmpty() ? new ArrayList<>() : files));
     }
 
+    /** Получение постов по ID полигона
+     * При успехе возвращает {@code 202}
+     * @see PostService#getPostsByObjectId(Long)
+     * */
+    @GetMapping("{object_id}/posts/")
+    @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<PostDTO> getPostsByObjectId(@PathVariable("object_id") Long objectId){
+        return postService.getPostsByObjectId(objectId);
+    }
+
     /** Получение поста по ID
-     * При успехе возвращает {@code 302}
+     * При успехе возвращает {@code 202}
      * @see PostService#getPost(Long)
      * */
     @GetMapping(path = "{object_id}/{post_id}/")

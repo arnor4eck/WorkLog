@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /** Сервис для постов
  * @see Post
@@ -68,5 +69,9 @@ public class PostService {
         return PostDTO.fromPost(this.postRepository.findById(postId)
                 .orElseThrow(() ->
                         new PostNotFoundException("Поста с id '%d' не существует".formatted(postId))));
+    }
+
+    public List<PostDTO> getPostsByObjectId(Long objectId){
+        return postRepository.findByObjectId(objectId).stream().map(PostDTO::fromPost).toList();
     }
 }
