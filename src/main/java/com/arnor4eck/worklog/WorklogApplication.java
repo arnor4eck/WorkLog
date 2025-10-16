@@ -6,6 +6,7 @@ import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
 import com.arnor4eck.worklog.construction_project.post.Post;
 import com.arnor4eck.worklog.construction_project.post.PostRepository;
 import com.arnor4eck.worklog.construction_project.post.files.FilesService;
+import com.arnor4eck.worklog.construction_project.utils.ObjectStatus;
 import com.arnor4eck.worklog.cv.CVService;
 import com.arnor4eck.worklog.user.Role;
 import com.arnor4eck.worklog.user.RoleRepository;
@@ -81,6 +82,7 @@ public class WorklogApplication {
 			project.setCoordinates(List.of(coord1, coord2));
 
 			project.getUsers().add(users.get(0));
+			project.setStatus(ObjectStatus.ACTIVE);
 			project.addResponsibleSupervision(users.get(1));
 			project.addResponsibleContractor(users.get(2));
 

@@ -49,6 +49,11 @@ public class ConstructionProjectDTO {
      * */
     private final List<PostDTO> posts;
 
+    /** Статус объекта
+     * @see ObjectStatus
+     * */
+    private final String status;
+
     /** Создание DTO из класса {@link ConstructionProject}
      * @param constructionProject {@link ConstructionProject}
      * */
@@ -59,6 +64,7 @@ public class ConstructionProjectDTO {
                 .description(constructionProject.getDescription())
                 .coordinates(constructionProject.getCoordinates())
                 .posts(posts)
+                .status(constructionProject.getStatus().getCode())
                 .responsibleContractor(
                         UserDTO.formUser(
                                 constructionProject.getResponsibleContractor()))
