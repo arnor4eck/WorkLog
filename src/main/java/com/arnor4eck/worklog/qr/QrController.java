@@ -36,7 +36,7 @@ public class QrController {
     public ResponseEntity<Resource> downloadQr() throws IOException, WriterException {
         String currentTime = LocalDateTime.now().toString();
         String url = "http://127.0.0.1:8080/qr/read/?r=";
-        byte[] qrBytes = qrService.generateQr(url + currentTime, 250, 250);
+        byte[] qrBytes = qrService.generateQr(url + currentTime, 450, 450);
         ByteArrayResource qr = qrService.qrResource(qrBytes);
 
         return ResponseEntity.ok()

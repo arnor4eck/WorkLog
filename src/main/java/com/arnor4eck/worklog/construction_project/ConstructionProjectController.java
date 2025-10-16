@@ -95,7 +95,7 @@ public class ConstructionProjectController {
         return postService.getPost(postId);
     }
 
-    /** Получение прикрепленного к посту файлу
+    /** Получение прикрепленного к посту файла
      * При успехе возвращает {@code 302}
      * @see FilesService#findFile(long, long, String)
      * */

@@ -22,7 +22,6 @@ import java.io.IOException;
  * */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
     /** @see JwtAuthUtils
      * */

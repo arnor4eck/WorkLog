@@ -3,6 +3,7 @@ package com.arnor4eck.worklog.construction_project.post;
 import com.arnor4eck.worklog.construction_project.ConstructionProjectRepository;
 import com.arnor4eck.worklog.construction_project.post.files.FilesService;
 import com.arnor4eck.worklog.construction_project.post.utils.PostDTO;
+import com.arnor4eck.worklog.construction_project.post.utils.PostNotFoundException;
 import com.arnor4eck.worklog.construction_project.utils.ProjectNotFoundException;
 import com.arnor4eck.worklog.construction_project.post.request.CreatePostRequest;
 import com.arnor4eck.worklog.user.UserRepository;
@@ -61,11 +62,11 @@ public class PostService {
     /** Получение поста по ID
      * @param postId ID поста
      * @see PostDTO
-     * @throws ProjectNotFoundException Если полигона с переданным ID не существует
+     * @throws PostNotFoundException Если поста с переданным ID не существует
      * */
     public PostDTO getPost(Long postId){
         return PostDTO.fromPost(this.postRepository.findById(postId)
                 .orElseThrow(() ->
-                        new ProjectNotFoundException("Поста с id '%d' не существует".formatted(postId))));
+                        new PostNotFoundException("Поста с id '%d' не существует".formatted(postId))));
     }
 }

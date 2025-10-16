@@ -1,0 +1,362 @@
+openapi: 3.0.4
+
+info:
+  title: WorkLog
+  version: 1.0.0
+  description: API для SpringBoot приложения для хакатона "Лидеры цифровой трансформации".
+
+tags:
+  - name: Authentication
+    description: Аутентификация и авторизация
+  - name: Objects
+    description: Работа с полигонами
+  - name: Posts
+    description: Записи о полигоне
+  - name: QR
+    description: QR-код
+
+paths:
+  /auth/:
+    post:
+      tags:
+        - Authentication
+      summary: Авторизация
+      description: Авторизация с помощью JWT.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@mail.ru
+                password:
+                  type: string
+                  example: admin
+      responses:
+        '200':
+          description: Успешная авторизация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0RFVkVMT1BFUiJdLCJzdWIiOiJiZXJlQG1haWwucnUiLCJpYXQiOjE3NjA1NTYxNDMsImV4cCI6MTc2MDU1NzM0M30.a98PPOvskxBc2drgaRQpCACDRGli4d-7V8Vt2ljQ3gOKCUpesCs4WAQWkwqryX2fIYbhUBUMTcJILe6H1RXfCQ
+
+  /objects/my_objects:
+    get:
+      tags:
+        - Objects
+      summary: Полигоны пользователя
+      description: Возвращает массив полигонов, к которым привязан пользователь.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Массив полигонов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConstructionProject'
+        '401':
+          description: Не авторизован
+  /objects/{object_id}/:
+    get:
+      tags:
+        - Objects
+      summary: Полигон
+      description: Получение полигона по id
+      parameters:
+        - name: object_id
+          in: path
+          description: ID полигона
+          required: true
+          schema:
+            type: integer
+            format: int64
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Полигон
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  object:
+                    $ref: '#/components/schemas/ConstructionProject'
+        '403':
+          description: Нет доступа к ресурсу.
+  /objects/access/{object_id}/create_post/:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Posts
+      summary: Создать запись для полигона
+      description: Создает запись, привязанную к конкретному полигону
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID полигона
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - content
+                - author
+              properties:
+                title:
+                  type: string
+                  example: "Testing tools"
+                content:
+                  type: string
+                  example: "Great job!"
+                author:
+                  type: integer
+                  description: ID автора
+                  example: 1
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201':
+          description: Запись успешно создана.
+        '401':
+          description: Требуется авторизация.
+        '403':
+          description: Нет доступа к ресурсу.
+  /objects/{object_id}/{post_id}/:
+    get:
+      tags:
+        - Posts
+      summary: Получение записи
+      description: Получение записи по ID
+      parameters:
+        - name: object_id
+          in: path
+          description: ID полигона
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: post_id
+          in: path
+          description: ID записи
+          required: true
+          schema:
+            type: integer
+            format: int64
+      security:
+        - bearerAuth: []
+      responses:
+        '302':
+          description: Запись найдена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  object:
+                    $ref: '#/components/schemas/Post'
+        '403':
+          description: Нет доступа
+        '404':
+          description: Поста с переданным ID не существует
+
+  /objects/{object_id}/{post_id}/file/:
+    parameters:
+      - name: object_id
+        in: path
+        description: ID полигона
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: post_id
+        in: path
+        description: ID записи
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: file_name
+        in: query
+        description: Имя файла для поиска
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Posts
+      summary: Получение файла
+      description: Получение файла из записи.
+      security:
+        - bearerAuth: []
+      responses:
+        '302':
+          description: Файл найден
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+
+        '403':
+          description: Нет доступа
+        '404':
+          description: Нет запрошенного ресурса
+  /qr/generate/:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - QR
+      summary: Генерация QR
+      description: Генерация QR, содержит в себе время генерации
+      responses:
+        '200':
+          description: QR создан
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              example: "attachment; filename=2024-01-15T14:30:25.123.png"
+            Content-Type:
+              schema:
+                type: string
+              example: "image/png"
+            Content-Length:
+              schema:
+                type: integer
+              example: 2048
+  /qr/read/:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Чтение QR
+      description: Обработка прочитанного QR
+      tags:
+        - QR
+      parameters:
+        - name: r
+          in: query
+          description: Время генерации QR
+          required: true
+          schema:
+            type: string
+            format: ISO_TIME
+      responses:
+        '200':
+          description: QR корректен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0RFVkVMT1BFUiJdLCJzdWIiOiJiZXJlQG1haWwucnUiLCJpYXQiOjE3NjA1NTYxNDMsImV4cCI6MTc2MDU1NzM0M30.a98PPOvskxBc2drgaRQpCACDRGli4d-7V8Vt2ljQ3gOKCUpesCs4WAQWkwqryX2fIYbhUBUMTcJILe6H1RXfCQ
+        '409':
+          description: Срок действия QR истек
+
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      description: Пользователь
+      type: object
+      properties:
+        name:
+          type: string
+          example: Vlad
+        position:
+          type: string
+          description: Должность
+          example: Главный бухгалтер
+        email:
+          type: string
+          format: email
+          example: example@mail.ru
+    ConstructionProject:
+      description: Полигон
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: project_1
+        description:
+          type: string
+          example: huge house
+        coordinates:
+          type: array
+          items:
+            type: number
+            format: double
+          minItems: 2
+          maxItems: 2
+          description: Координаты [широта, долгота]
+          example: [55.7558, 37.6173]
+        responsibleContractor: # Ответственный пользователь, назначаемый от подрядчика
+          $ref: '#/components/schemas/User'
+        responsibleSupervision: # Ответственный пользователь, назначаемый от технического надзора
+          $ref: '#/components/schemas/User'
+    Post:
+      description: Запись о полигоне.
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Замечание
+        content:
+          type: string
+          example: Исправить кладку кирпича
+        createrd_at:
+          type: string
+          example: "29/09/2025 [15:39]"
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+            example: file.pdf
+        author:
+          $ref: '#/components/schemas/User'
