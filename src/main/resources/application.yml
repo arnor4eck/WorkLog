@@ -13,6 +13,10 @@ spring:
       database-platform: org.hibernate.dialect.PostgreSQLDialect
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 logging:
   level:
@@ -22,3 +26,6 @@ logging:
 jwt:
   secret: labububabyj0hnprostoesh1k1abububabyjohnprost0eshiklabububabyj0hnprostoeshik
   lifetime: 1200000
+
+api:
+  giga-chat-api: ${GIGACHAT_API}

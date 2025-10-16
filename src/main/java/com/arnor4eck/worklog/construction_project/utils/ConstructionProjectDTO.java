@@ -2,6 +2,7 @@ package com.arnor4eck.worklog.construction_project.utils;
 
 import com.arnor4eck.worklog.construction_project.ConstructionProject;
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
+import com.arnor4eck.worklog.construction_project.post.utils.PostDTO;
 import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserDTO;
 import lombok.Builder;
@@ -43,15 +44,21 @@ public class ConstructionProjectDTO {
      * */
     private final UserDTO responsibleSupervision;
 
+    /** Записи, прикрепленные к объекту
+     * @see PostDTO
+     * */
+    private final List<PostDTO> posts;
+
     /** Создание DTO из класса {@link ConstructionProject}
      * @param constructionProject {@link ConstructionProject}
      * */
-    public static ConstructionProjectDTO formConstructionProject(ConstructionProject constructionProject){
+    public static ConstructionProjectDTO formConstructionProject(ConstructionProject constructionProject, List<PostDTO> posts){
         return ConstructionProjectDTO.builder()
                 .id(constructionProject.getId())
                 .name(constructionProject.getName())
                 .description(constructionProject.getDescription())
                 .coordinates(constructionProject.getCoordinates())
+                .posts(posts)
                 .responsibleContractor(
                         UserDTO.formUser(
                                 constructionProject.getResponsibleContractor()))

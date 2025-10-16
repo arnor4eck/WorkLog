@@ -5,18 +5,23 @@ import com.arnor4eck.worklog.construction_project.ConstructionProjectRepository;
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
 import com.arnor4eck.worklog.construction_project.post.Post;
 import com.arnor4eck.worklog.construction_project.post.PostRepository;
+import com.arnor4eck.worklog.construction_project.post.files.FilesService;
 import com.arnor4eck.worklog.cv.CVService;
 import com.arnor4eck.worklog.user.Role;
 import com.arnor4eck.worklog.user.RoleRepository;
 import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 @SpringBootApplication
@@ -35,7 +40,10 @@ public class WorklogApplication {
 
 	private final PasswordEncoder passwordEncoder;
 
-	public static void main(String[] args) {
+	private final FilesService filesService;
+
+
+    public static void main(String[] args) {
 		SpringApplication.run(WorklogApplication.class, args);
 	}
 
@@ -77,6 +85,13 @@ public class WorklogApplication {
 			project.addResponsibleContractor(users.get(2));
 
 			constructionProjectRepository.saveAll(List.of(project, project2));
+
+			try{
+				Files.createDirectories(Path.of(filesService.createPathToObject(project.getId())));
+				Files.createDirectories(Path.of(filesService.createPathToObject(project2.getId())));
+			}catch (IOException e){
+				throw new RuntimeException(e);
+			}
 
 			List<Post> posts = List.of(new Post("escape the backrooms", "biba"),
 					new Post("escape the backrooms2", "biba2"));

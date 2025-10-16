@@ -1,7 +1,9 @@
 package com.arnor4eck.worklog.construction_project.post.files;
 
 import com.arnor4eck.worklog.construction_project.post.PostService;
+import com.arnor4eck.worklog.construction_project.post.files.utils.FileNotFound;
 import com.arnor4eck.worklog.construction_project.post.utils.PostNotFoundException;
+import com.arnor4eck.worklog.construction_project.utils.ProjectNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,12 @@ public class FilesService {
                         String.format("post_%d", postId), fileName);
     }
 
+    public String createPathToObject(long objectId){
+        String sep = FileSystems.getDefault().getSeparator();
+        return String.join(sep, "src", "main",
+                "resources", String.format("project_%d", objectId));
+    }
+
     /** Нахождение файла в файловой системе
      * @param postId ID поста
      * @param objectId ID полигона
@@ -42,7 +50,16 @@ public class FilesService {
             throw new PostNotFoundException("Пост с id '%d' не найден.".formatted(postId));
         return Files.list(path)
                 .filter(f -> f.getFileName().toString().equals(fileName))
-                .findFirst().orElseThrow(() -> new FileNotFoundException("Файл не найден."));
+                .findFirst().orElseThrow(() -> new FileNotFound("Файл не найден."));
+    }
+
+    public Path findFile(long objectId, String fileName) throws IOException {
+        Path path = Paths.get(this.createPathToObject(objectId));
+        if(!path.toFile().exists())
+            throw new ProjectNotFoundException("Полигон с id '%d' не найден.".formatted(objectId));
+        return Files.list(path)
+                .filter(f -> f.getFileName().toString().equals(fileName))
+                .findFirst().orElseThrow(() -> new FileNotFound("Файл не найден."));
     }
 
     /** Возвращает расширение файла
@@ -84,5 +101,9 @@ public class FilesService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void deleteFile(String path) throws IOException {
+        Files.deleteIfExists(Paths.get(path));
     }
 }
