@@ -1,6 +1,7 @@
 package com.arnor4eck.worklog.construction_project;
 
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
+import com.arnor4eck.worklog.construction_project.post.files.FilesService;
 import com.arnor4eck.worklog.construction_project.utils.ConstructionProjectDTO;
 import com.arnor4eck.worklog.construction_project.utils.CreateObjectRequest;
 import com.arnor4eck.worklog.construction_project.utils.ProjectAlreadyExistsException;
@@ -15,6 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +33,8 @@ public class ConstructionProjectService {
     private final ConstructionProjectRepository constructionProjectRepository;
 
     private final UserRepository userRepository;
+
+    private final FilesService filesService;
 
     /** Проверяет, есть ли у пользователя доступ к данному полигону
      * @param projectId ID полигона
@@ -86,7 +92,8 @@ public class ConstructionProjectService {
     public void createObject(CreateObjectRequest request){
         if(constructionProjectRepository.existsByName(request.getName()))
             throw new ProjectAlreadyExistsException("Объект с названием '%s' уже существует.".formatted(request.getName()));
-        constructionProjectRepository.save(
+
+        ConstructionProject obj = constructionProjectRepository.save(
                 ConstructionProject.builder()
                         .name(request.getName())
                         .description(request.getDescription())
@@ -103,5 +110,10 @@ public class ConstructionProjectService {
                                                         () -> new UsernameNotFoundException("Пользователя с id %d не существует".formatted(n))))
                                         .collect(Collectors.toSet()))
                         .build());
+        try{
+            Files.createDirectories(Path.of(filesService.createPathToObject(obj.getId())));
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
     }
 }

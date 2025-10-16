@@ -19,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
@@ -106,6 +107,30 @@ public class ConstructionProjectController {
                                             @RequestParam("file_name") String fileName) throws IOException {
         Path file = filesService.findFile(objectId,postId, fileName);
 
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .contentType(MediaType.parseMediaType(
+                        filesService.determineContentType(
+                                filesService.getPostfix(file.getFileName().toString()))))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + file.getFileName().toString() + "\"")
+                .body(new FileSystemResource(file));
+    }
+
+    @PostMapping(path="{object_id}/act/")
+    @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void loadActOfOpening(@PathVariable("object_id") Long objectId,
+                                 @RequestParam(required = true) MultipartFile file) throws IOException {
+        String pathToFile = filesService.createPathToObject(objectId) + File.separator + "act.pdf";
+        filesService.deleteFile(pathToFile);
+        filesService.saveFile(file, pathToFile);
+    }
+
+    @GetMapping(path="{object_id}/act/")
+    @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<Resource> getActOfOpening(@PathVariable("object_id") Long objectId) throws IOException {
+        Path file = filesService.findFile(objectId, "act.pdf");
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .contentType(MediaType.parseMediaType(
                         filesService.determineContentType(
