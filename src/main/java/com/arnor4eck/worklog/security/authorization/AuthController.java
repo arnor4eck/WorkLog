@@ -2,7 +2,7 @@ package com.arnor4eck.worklog.security.authorization;
 
 import com.arnor4eck.worklog.security.authorization.jwt.JwtRequest;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtResponse;
-import com.arnor4eck.worklog.security.authorization.jwt.JwtUtils;
+import com.arnor4eck.worklog.security.authorization.jwt.jwt_utils.JwtAuthUtils;
 import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserRepository;
 import com.arnor4eck.worklog.utils.ExceptionResponse;
@@ -35,9 +35,9 @@ public class AuthController {
      * */
     private final UserRepository userRepository;
 
-    /** @see JwtUtils
+    /** @see JwtAuthUtils
      * */
-    private final JwtUtils jwtUtils;
+    private final JwtAuthUtils jwtUtils;
 
     /** @see com.arnor4eck.worklog.security.SecurityConfig#authenticationManager(UserDetailsService, PasswordEncoder)
      * */
