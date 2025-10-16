@@ -3,6 +3,8 @@ package com.arnor4eck.worklog.security;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtAccessDeniedHandler;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtAuthenticationEntryPoint;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtRequestFilter;
+import com.arnor4eck.worklog.security.authorization.jwt.JwtAccessFilter;
+import com.arnor4eck.worklog.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -26,6 +27,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/** Конфигурация безопасности приложения
+ * */
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -37,18 +40,21 @@ public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    @Bean
-    /**
-     * Указание алгоритма шифрования пароля
+    private final JwtAccessFilter jwtAccessFilter;
+
+    /** Указание алгоритма шифрования пароля
      * */
+    @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    /**
-     * Менеджер авторизации, использующий UserDetailsService (в нашем случае - кастомный, по email)
+    /** Менеджер авторизации
+     * @param passwordEncoder Алгоритм шифрования системы {@link SecurityConfig#passwordEncoder()}
+     * @param userDetailsService Интерфейс, который загружает информацию о пользователе из БД {@link com.arnor4eck.worklog.user.UserConfig#userDetailsServiceEmail(UserRepository)}
+     * @return Менеджер авторизации
      * */
+    @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
                                                        PasswordEncoder passwordEncoder){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailsService);
@@ -57,6 +63,8 @@ public class SecurityConfig {
         return new ProviderManager(daoAuthenticationProvider);
     }
 
+    /** Настройки для CORS
+     * */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -74,6 +82,8 @@ public class SecurityConfig {
         return source;
     }
 
+    /** Обработчик запросов к приложению
+     * */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http
@@ -84,7 +94,7 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/auth/**").permitAll()
-                            .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/qr/generate/").hasRole("ADMIN")
                             .anyRequest().authenticated();
         }).csrf(CsrfConfigurer::disable) // отключение CSRF
                 .formLogin(AbstractHttpConfigurer::disable) // нет формы
@@ -93,6 +103,7 @@ public class SecurityConfig {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 }) // отключение сессий
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtAccessFilter, JwtRequestFilter.class)
                 .build();
     }
 }

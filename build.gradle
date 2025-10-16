@@ -46,8 +46,18 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.13.0' // JWT
 	implementation 'io.jsonwebtoken:jjwt-impl:0.13.0' // JWT
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.13.0' // JWT
+
+	implementation 'com.google.zxing:core:3.5.2' // qr
+	implementation 'com.google.zxing:javase:3.5.2' // qr
+
+	implementation 'net.sourceforge.tess4j:tess4j:5.13.0' // cv
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.withType(Javadoc){
+	options.memberLevel = JavadocMemberLevel.PRIVATE
+}
+
