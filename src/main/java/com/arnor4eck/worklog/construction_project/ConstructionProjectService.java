@@ -1,7 +1,9 @@
 package com.arnor4eck.worklog.construction_project;
 
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
+import com.arnor4eck.worklog.construction_project.post.PostRepository;
 import com.arnor4eck.worklog.construction_project.post.files.FilesService;
+import com.arnor4eck.worklog.construction_project.post.utils.PostDTO;
 import com.arnor4eck.worklog.construction_project.utils.ConstructionProjectDTO;
 import com.arnor4eck.worklog.construction_project.utils.CreateObjectRequest;
 import com.arnor4eck.worklog.construction_project.utils.ProjectAlreadyExistsException;
@@ -32,6 +34,8 @@ public class ConstructionProjectService {
 
     private final ConstructionProjectRepository constructionProjectRepository;
 
+    private final PostRepository postRepository;
+
     private final UserRepository userRepository;
 
     private final FilesService filesService;
@@ -58,7 +62,7 @@ public class ConstructionProjectService {
     public List<ConstructionProjectDTO> getUserObjects(long userId){
         return constructionProjectRepository
                 .findByUsersId(userId).stream()
-                .map(ConstructionProjectDTO::formConstructionProject)
+                .map(p -> ConstructionProjectDTO.formConstructionProject(p, null))
                 .toList();
     }
 
@@ -71,7 +75,7 @@ public class ConstructionProjectService {
         return this.getUserObjects(currentUser.getId());
     }
 
-    /** Вовзвращает полигон по его ID
+    /** Вовзвращает полигон по его ID с записями к полигону
      * @param id ID полигона
      * @return Полигон
      * @see ConstructionProjectDTO
@@ -81,7 +85,9 @@ public class ConstructionProjectService {
         ConstructionProject object = constructionProjectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Полигона с id '%d' не существует".formatted(id)));
 
-        return ConstructionProjectDTO.formConstructionProject(object);
+
+        return ConstructionProjectDTO.formConstructionProject(object,
+                postRepository.findByObjectId(id).stream().map(PostDTO::fromPost).toList());
     }
 
     /** Создание полигона
