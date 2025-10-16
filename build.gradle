@@ -45,6 +45,8 @@ dependencies {
 
 	implementation 'com.google.zxing:core:3.5.2' // qr
 	implementation 'com.google.zxing:javase:3.5.2' // qr
+
+	implementation 'net.sourceforge.tess4j:tess4j:5.13.0' // cv
 }
 
 tasks.named('test') {
