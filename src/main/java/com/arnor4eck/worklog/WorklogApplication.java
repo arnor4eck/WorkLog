@@ -5,6 +5,7 @@ import com.arnor4eck.worklog.construction_project.ConstructionProjectRepository;
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
 import com.arnor4eck.worklog.construction_project.post.Post;
 import com.arnor4eck.worklog.construction_project.post.PostRepository;
+import com.arnor4eck.worklog.cv.CVService;
 import com.arnor4eck.worklog.user.Role;
 import com.arnor4eck.worklog.user.RoleRepository;
 import com.arnor4eck.worklog.user.User;
@@ -21,6 +22,8 @@ import java.util.List;
 @SpringBootApplication
 @AllArgsConstructor
 public class WorklogApplication {
+
+	private final CVService tesseract;
 
 	private final RoleRepository roleRepository;
 

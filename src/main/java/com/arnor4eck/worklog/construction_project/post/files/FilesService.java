@@ -1,5 +1,8 @@
 package com.arnor4eck.worklog.construction_project.post.files;
 
+import com.arnor4eck.worklog.construction_project.post.PostService;
+import com.arnor4eck.worklog.construction_project.post.utils.PostNotFoundException;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +37,10 @@ public class FilesService {
      * @return Path - файл
      * */
     public Path findFile(long objectId, long postId, String fileName) throws IOException {
-        return Files.list(Paths.get(this.createPath("", objectId, postId)))
+        Path path = Paths.get(this.createPath("", objectId, postId));
+        if(!path.toFile().exists())
+            throw new PostNotFoundException("Пост с id '%d' не найден.".formatted(postId));
+        return Files.list(path)
                 .filter(f -> f.getFileName().toString().equals(fileName))
                 .findFirst().orElseThrow(() -> new FileNotFoundException("Файл не найден."));
     }
