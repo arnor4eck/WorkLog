@@ -62,7 +62,7 @@ public class ConstructionProjectController {
      * */
     @GetMapping("{id}/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ConstructionProjectDTO getProject(@PathVariable("id") long objectId){
         return constructionProjectService.getObject(objectId);
     }
@@ -89,7 +89,7 @@ public class ConstructionProjectController {
      * */
     @GetMapping(path = "{object_id}/{post_id}/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public PostDTO getPost(@PathVariable("object_id") Long objectId,
                            @PathVariable("post_id") Long postId){
         return postService.getPost(postId);
@@ -106,7 +106,7 @@ public class ConstructionProjectController {
                                             @RequestParam("file_name") String fileName) throws IOException {
         Path file = filesService.findFile(objectId,postId, fileName);
 
-        return ResponseEntity.status(HttpStatus.FOUND)
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .contentType(MediaType.parseMediaType(
                         filesService.determineContentType(
                                 filesService.getPostfix(file.getFileName().toString()))))
