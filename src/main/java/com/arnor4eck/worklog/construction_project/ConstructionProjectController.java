@@ -69,18 +69,18 @@ public class ConstructionProjectController {
 
     /** Создание поста
      * При успехе возвращает {@code 201}
-     * @see PostService#createPost(Long, CreatePostRequest)
+     * @see PostService#createPostBySender
      * */
     @PostMapping(path = "/access/{object_id}/create_post/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPost(@PathVariable("object_id") Long objectId, @RequestParam String title,
+    public void createPost(@PathVariable("object_id") Long objectId,
+                           @RequestParam String title,
                            @RequestParam String content,
-                           @RequestParam Long author,
+                           @RequestParam String status,
                            @RequestParam(required = false) List<MultipartFile> files) throws FileAlreadyExistsException {
 
-        postService.createPost(objectId, new CreatePostRequest(title, content,
-                author, files == null || files.isEmpty() ? new ArrayList<>() : files));
+        postService.createPostBySender(objectId, title, content, status, files == null || files.isEmpty() ? new ArrayList<>() : files);
     }
 
     /** Получение постов по ID полигона

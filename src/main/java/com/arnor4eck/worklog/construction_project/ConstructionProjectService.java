@@ -10,6 +10,7 @@ import com.arnor4eck.worklog.construction_project.utils.ProjectAlreadyExistsExce
 import com.arnor4eck.worklog.construction_project.utils.ProjectNotFoundException;
 import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserRepository;
+import com.arnor4eck.worklog.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
@@ -39,6 +40,8 @@ public class ConstructionProjectService {
     private final UserRepository userRepository;
 
     private final FilesService filesService;
+
+    private final UserService userService;
 
     /** Проверяет, есть ли у пользователя доступ к данному полигону
      * @param projectId ID полигона
@@ -70,7 +73,7 @@ public class ConstructionProjectService {
      * @return Список объектов
      * */
     public List<ConstructionProjectDTO> getCurrentUserObjects(){
-        User currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        User currentUser = userService.getAuthedUser();
 
         return this.getUserObjects(currentUser.getId());
     }

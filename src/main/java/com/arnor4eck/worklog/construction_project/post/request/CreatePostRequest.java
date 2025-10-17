@@ -1,5 +1,6 @@
 package com.arnor4eck.worklog.construction_project.post.request;
 
+import com.arnor4eck.worklog.construction_project.post.utils.PostStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +24,7 @@ public class CreatePostRequest {
      * */
     private final long author;
 
-    /** Список файлов
-     * @see MultipartFile
+    /** Тип записи
      * */
-    private List<MultipartFile> files;
+    private final PostStatus status;
 }

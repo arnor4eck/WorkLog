@@ -1,4 +1,4 @@
-package com.arnor4eck.worklog.user;
+package com.arnor4eck.worklog.user.role;
 
 import jakarta.persistence.*;
 import lombok.Data;
