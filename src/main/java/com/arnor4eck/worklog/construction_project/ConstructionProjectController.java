@@ -19,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
@@ -132,16 +131,14 @@ public class ConstructionProjectController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void loadActOfOpening(@PathVariable("object_id") Long objectId,
                                  @RequestParam(required = true) MultipartFile file) throws IOException {
-        String pathToFile = filesService.createPathToObject(objectId) + File.separator + "act.pdf";
-        filesService.deleteFile(pathToFile);
-        filesService.saveFile(file, pathToFile);
+        filesService.uploadToObject(objectId, "act", file);
     }
 
     @GetMapping(path="{object_id}/act/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<Resource> getActOfOpening(@PathVariable("object_id") Long objectId) throws IOException {
-        Path file = filesService.findFile(objectId, "act.pdf");
+        Path file = filesService.findFile(objectId, "act");
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .contentType(MediaType.parseMediaType(
                         filesService.determineContentType(
@@ -156,16 +153,14 @@ public class ConstructionProjectController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void loadСompositionOfWorks(@PathVariable("object_id") Long objectId,
                                  @RequestParam(required = true) MultipartFile file) throws IOException {
-        String pathToFile = filesService.createPathToObject(objectId) + File.separator + "works.pdf";
-        filesService.deleteFile(pathToFile);
-        filesService.saveFile(file, pathToFile);
+        filesService.uploadToObject(objectId, "works", file);
     }
 
     @GetMapping(path="{object_id}/works/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<Resource> getСompositionOfWorks(@PathVariable("object_id") Long objectId) throws IOException {
-        Path file = filesService.findFile(objectId, "works.pdf");
+        Path file = filesService.findFile(objectId, "works");
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .contentType(MediaType.parseMediaType(
                         filesService.determineContentType(

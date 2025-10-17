@@ -24,6 +24,8 @@ public class UserDTO {
      * */
     private final String email;
 
+    private final String role;
+
     /** Создание DTO из класса {@link User}
      * @param user {@link User}
      * @return {@link UserDTO}
@@ -33,6 +35,7 @@ public class UserDTO {
                 .username(user.getUsername())
                 .position(user.getPosition())
                 .email(user.getEmail())
+                .role(user.getAuthorities().get(0).getName())
                 .build();
     }
 }

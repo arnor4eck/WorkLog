@@ -68,7 +68,7 @@ public class User implements UserDetails {
      * @return пользовательские роли
      * */
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public List<Role> getAuthorities() {
         return this.authorities;
     }
 

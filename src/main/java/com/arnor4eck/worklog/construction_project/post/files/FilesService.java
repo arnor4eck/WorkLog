@@ -1,18 +1,14 @@
 package com.arnor4eck.worklog.construction_project.post.files;
 
-import com.arnor4eck.worklog.construction_project.post.PostService;
-import com.arnor4eck.worklog.construction_project.post.files.utils.FileNotFound;
+import com.arnor4eck.worklog.construction_project.post.files.utils.FileNotFoundException;
 import com.arnor4eck.worklog.construction_project.post.utils.PostNotFoundException;
 import com.arnor4eck.worklog.construction_project.utils.ProjectNotFoundException;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.List;
 
 /** Сервис для Файлов
  * */
@@ -31,6 +27,11 @@ public class FilesService {
                         String.format("post_%d", postId), fileName);
     }
 
+    public void uploadToObject(long objectId, String fileName, MultipartFile file) throws IOException{
+        String pathToFile = this.createPathToObject(objectId) + File.separator + fileName + this.getPostfix(file.getOriginalFilename());
+        this.saveFile(file, pathToFile);
+    }
+
     public String createPathToObject(long objectId){
         String sep = FileSystems.getDefault().getSeparator();
         return String.join(sep, "src", "main",
@@ -41,7 +42,7 @@ public class FilesService {
      * @param postId ID поста
      * @param objectId ID полигона
      * @param fileName Название файла
-     * @throws FileNotFoundException Если файл не был найден
+     * @throws java.io.FileNotFoundException Если файл не был найден
      * @return Path - файл
      * */
     public Path findFile(long objectId, long postId, String fileName) throws IOException {
@@ -50,7 +51,7 @@ public class FilesService {
             throw new PostNotFoundException("Пост с id '%d' не найден.".formatted(postId));
         return Files.list(path)
                 .filter(f -> f.getFileName().toString().equals(fileName))
-                .findFirst().orElseThrow(() -> new FileNotFound("Файл не найден."));
+                .findFirst().orElseThrow(() -> new FileNotFoundException("Файл не найден."));
     }
 
     public Path findFile(long objectId, String fileName) throws IOException {
@@ -58,8 +59,8 @@ public class FilesService {
         if(!path.toFile().exists())
             throw new ProjectNotFoundException("Полигон с id '%d' не найден.".formatted(objectId));
         return Files.list(path)
-                .filter(f -> f.getFileName().toString().equals(fileName))
-                .findFirst().orElseThrow(() -> new FileNotFound("Файл не найден."));
+                .filter(f -> f.getFileName().toString().contains(fileName))
+                .findFirst().orElseThrow(() -> new FileNotFoundException("Файл не найден."));
     }
 
     /** Возвращает расширение файла
