@@ -19,7 +19,7 @@ public class PostDTO {
 
     /** Заголовок поста
      * */
-        private final String title;
+    private final String title;
 
     /** Содержимое поста
      * */
@@ -27,7 +27,7 @@ public class PostDTO {
 
     /** Дата создания
      * */
-    private final String createdAt;
+    private final String created_at;
 
     /** Список названий файлов, прикреплённых к посту
      * */
@@ -52,7 +52,7 @@ public class PostDTO {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .type(post.getType().getCode())
-                .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy '['HH:mm']'")))
+                .created_at(post.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy '['HH:mm']'")))
                 .files(post.getFiles())
                 .author(UserDTO.formUser(post.getAuthor()))
                 .build();
