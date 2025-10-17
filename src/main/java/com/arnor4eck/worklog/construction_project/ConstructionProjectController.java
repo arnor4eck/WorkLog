@@ -1,5 +1,6 @@
 package com.arnor4eck.worklog.construction_project;
 
+import com.arnor4eck.worklog.construction_project.post.files.utils.FileNotFound;
 import com.arnor4eck.worklog.construction_project.post.utils.PostDTO;
 import com.arnor4eck.worklog.construction_project.post.PostService;
 import com.arnor4eck.worklog.construction_project.post.files.FilesService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
@@ -132,16 +134,20 @@ public class ConstructionProjectController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void loadActOfOpening(@PathVariable("object_id") Long objectId,
                                  @RequestParam(required = true) MultipartFile file) throws IOException {
-        String pathToFile = filesService.createPathToObject(objectId) + File.separator + "act.pdf";
-        filesService.deleteFile(pathToFile);
-        filesService.saveFile(file, pathToFile);
+        try{
+            Path fileDeleted = filesService.findFile(objectId, "act");
+            filesService.deleteFile(fileDeleted.toAbsolutePath().toString());
+        } catch (FileNotFound e){} finally {
+            String pathToFile = filesService.createPathToObject(objectId) + File.separator + "act" + filesService.getPostfix(file.getOriginalFilename());
+            filesService.saveFile(file, pathToFile);
+        }
     }
 
     @GetMapping(path="{object_id}/act/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<Resource> getActOfOpening(@PathVariable("object_id") Long objectId) throws IOException {
-        Path file = filesService.findFile(objectId, "act.pdf");
+        Path file = filesService.findFile(objectId, "act");
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .contentType(MediaType.parseMediaType(
                         filesService.determineContentType(
@@ -156,16 +162,20 @@ public class ConstructionProjectController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void loadСompositionOfWorks(@PathVariable("object_id") Long objectId,
                                  @RequestParam(required = true) MultipartFile file) throws IOException {
-        String pathToFile = filesService.createPathToObject(objectId) + File.separator + "works.pdf";
-        filesService.deleteFile(pathToFile);
-        filesService.saveFile(file, pathToFile);
+        try{
+            Path fileDeleted = filesService.findFile(objectId, "works");
+            filesService.deleteFile(fileDeleted.toAbsolutePath().toString());
+        } catch (FileNotFound e){} finally {
+            String pathToFile = filesService.createPathToObject(objectId) + File.separator + "works" + filesService.getPostfix(file.getOriginalFilename());
+            filesService.saveFile(file, pathToFile);
+        }
     }
 
     @GetMapping(path="{object_id}/works/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<Resource> getСompositionOfWorks(@PathVariable("object_id") Long objectId) throws IOException {
-        Path file = filesService.findFile(objectId, "works.pdf");
+        Path file = filesService.findFile(objectId, "works");
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .contentType(MediaType.parseMediaType(
                         filesService.determineContentType(

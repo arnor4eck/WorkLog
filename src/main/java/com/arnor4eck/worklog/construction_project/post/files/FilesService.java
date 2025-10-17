@@ -58,7 +58,7 @@ public class FilesService {
         if(!path.toFile().exists())
             throw new ProjectNotFoundException("Полигон с id '%d' не найден.".formatted(objectId));
         return Files.list(path)
-                .filter(f -> f.getFileName().toString().equals(fileName))
+                .filter(f -> f.getFileName().toString().contains(fileName))
                 .findFirst().orElseThrow(() -> new FileNotFound("Файл не найден."));
     }
 
