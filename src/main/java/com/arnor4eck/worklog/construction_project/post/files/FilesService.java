@@ -27,11 +27,19 @@ public class FilesService {
                         String.format("post_%d", postId), fileName);
     }
 
+    /** Добавление файла в директорию полигона
+     * @param objectId ID полигона
+     * @param fileName Название файла
+     * @param file Сохраняемый файл
+     * */
     public void uploadToObject(long objectId, String fileName, MultipartFile file) throws IOException{
         String pathToFile = this.createPathToObject(objectId) + File.separator + fileName + this.getPostfix(file.getOriginalFilename());
         this.saveFile(file, pathToFile);
     }
 
+    /** Создание директории полигона (для сохранения файлов)
+     * @param objectId ID полигона
+     * */
     public String createPathToObject(long objectId){
         String sep = FileSystems.getDefault().getSeparator();
         return String.join(sep, "src", "main",
@@ -54,6 +62,11 @@ public class FilesService {
                 .findFirst().orElseThrow(() -> new FileNotFoundException("Файл не найден."));
     }
 
+    /** Нахождение файла в директории полигона
+     * @param objectId ID полигона
+     * @param fileName Название файла
+     * @return Path - файл
+     * */
     public Path findFile(long objectId, String fileName) throws IOException {
         Path path = Paths.get(this.createPathToObject(objectId));
         if(!path.toFile().exists())
@@ -102,9 +115,5 @@ public class FilesService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void deleteFile(String path) throws IOException {
-        Files.deleteIfExists(Paths.get(path));
     }
 }

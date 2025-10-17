@@ -11,8 +11,17 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/** Сервис для работы с QR
+ * */
 @Service
 public class QrService {
+
+    /** Генерация QR
+     * @param content Содержимое QR
+     * @param height Высота в пикселях
+     * @param width Ширина в пикселях
+     * @return Массив байт - QR
+     * */
     public byte[] generateQr(String content, int width, int height) throws WriterException, IOException {
         QRCodeWriter writer = new QRCodeWriter();
         BitMatrix matrix = writer.encode(content, BarcodeFormat.QR_CODE, width, height);
@@ -22,6 +31,10 @@ public class QrService {
         return out.toByteArray();
     }
 
+    /** Преобразование массива байтов в QR
+     * @param qr Массив байт
+     * @return ByteArrayResource - QR
+     * */
     public ByteArrayResource qrResource(byte[] qr){
         return new ByteArrayResource(qr);
     }

@@ -1,7 +1,7 @@
 package com.arnor4eck.worklog.construction_project.post;
 
 import com.arnor4eck.worklog.construction_project.ConstructionProject;
-import com.arnor4eck.worklog.construction_project.post.utils.PostStatus;
+import com.arnor4eck.worklog.construction_project.post.utils.PostType;
 import com.arnor4eck.worklog.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -74,7 +74,10 @@ public class Post {
     @JoinColumn(name = "project_id", nullable = false)
     private ConstructionProject object;
 
+    /** Тип поста
+     * @see PostType
+     * */
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private PostStatus status;
+    private PostType type;
 }

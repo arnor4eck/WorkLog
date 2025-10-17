@@ -22,7 +22,7 @@ public class JwtAccessUtils implements JwtUtils<String>{
      * */
     private Long lifetime = 300000L;
 
-    /** Генерация токена
+    /** @see JwtUtils#generateToken(Object) 
      * */
     @Override
     public String generateToken(String object) {
@@ -36,7 +36,7 @@ public class JwtAccessUtils implements JwtUtils<String>{
                 .compact();
     }
 
-    /** Проверка валидности токена
+    /** @see JwtUtils#validate(String) 
      * */
     @Override
     public boolean validate(String token) {

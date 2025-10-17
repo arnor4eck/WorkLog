@@ -1,11 +1,8 @@
 package com.arnor4eck.worklog.construction_project.post.request;
 
-import com.arnor4eck.worklog.construction_project.post.utils.PostStatus;
+import com.arnor4eck.worklog.construction_project.post.utils.PostType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 /** Запрос на создание поста
  * */
@@ -26,5 +23,5 @@ public class CreatePostRequest {
 
     /** Тип записи
      * */
-    private final PostStatus status;
+    private final PostType status;
 }

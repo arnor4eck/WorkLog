@@ -126,6 +126,9 @@ public class ConstructionProjectController {
                 .body(new FileSystemResource(file));
     }
 
+    /** Загрузка акта открытия полигона
+     * @see FilesService#uploadToObject(long, String, MultipartFile)
+     * */
     @PostMapping(path="{object_id}/act/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -134,6 +137,9 @@ public class ConstructionProjectController {
         filesService.uploadToObject(objectId, "act", file);
     }
 
+    /** Получение акта открытия полигона
+     * @see FilesService#findFile(long, String)
+     * */
     @GetMapping(path="{object_id}/act/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -148,6 +154,9 @@ public class ConstructionProjectController {
                 .body(new FileSystemResource(file));
     }
 
+    /** Загрузка состава работ полигона
+     * @see FilesService#uploadToObject(long, String, MultipartFile)
+     * */
     @PostMapping(path="{object_id}/works/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -156,6 +165,9 @@ public class ConstructionProjectController {
         filesService.uploadToObject(objectId, "works", file);
     }
 
+    /** Получение состава работ полигона
+     * @see FilesService#findFile(long, String)
+     * */
     @GetMapping(path="{object_id}/works/")
     @PreAuthorize("@constructionProjectService.hasAccess(authentication, #objectId)")
     @ResponseStatus(HttpStatus.ACCEPTED)

@@ -11,5 +11,9 @@ import java.util.List;
  * */
 @Repository
 public interface PostRepository extends CrudRepository<Post, Long> {
+    /** Поиск постов по ID полигона, к которому они прикреплены
+     * @param projectId ID полигона
+     * @return Массив - список постов
+     * */
     List<Post> findByObjectId(Long projectId);
 }

@@ -23,6 +23,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/** Работа с QR-кодами
+ * */
 @RestController
 @RequestMapping("qr/")
 @AllArgsConstructor
@@ -32,6 +34,9 @@ public class QrController {
 
     private final JwtAccessUtils jwtAccessUtils;
 
+    /** Генерация QR
+     * @see QrService#generateQr(String, int, int)
+     * */
     @GetMapping("generate/")
     public ResponseEntity<Resource> downloadQr() throws IOException, WriterException {
         String currentTime = LocalDateTime.now().toString();
@@ -46,6 +51,9 @@ public class QrController {
                 .body(qr);
     }
 
+    /** Чтение QR
+     * @see JwtAccessUtils
+     * */
     @GetMapping("read/")
     public ResponseEntity<?> getJwt(@RequestParam(value = "r") String time){
         Duration dur = Duration.between(LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME),
