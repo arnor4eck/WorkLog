@@ -11,6 +11,7 @@ import com.arnor4eck.worklog.construction_project.utils.ProjectNotFoundException
 import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserRepository;
 import com.arnor4eck.worklog.user.UserService;
+import com.arnor4eck.worklog.user.utils.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
@@ -65,7 +66,7 @@ public class ConstructionProjectService {
     public List<ConstructionProjectDTO> getUserObjects(long userId){
         return constructionProjectRepository
                 .findByUsersId(userId).stream()
-                .map(p -> ConstructionProjectDTO.formConstructionProject(p, null))
+                .map(p -> ConstructionProjectDTO.formConstructionProject(p, null, null))
                 .toList();
     }
 
@@ -90,7 +91,8 @@ public class ConstructionProjectService {
 
 
         return ConstructionProjectDTO.formConstructionProject(object,
-                postRepository.findByObjectId(id).stream().map(PostDTO::fromPost).toList());
+                postRepository.findByObjectId(id).stream().map(PostDTO::fromPost).toList(),
+                object.getUsers().stream().map(UserDTO::formUser).toList());
     }
 
     /** Создание полигона

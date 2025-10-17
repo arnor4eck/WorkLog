@@ -53,16 +53,22 @@ public class ConstructionProjectDTO {
      * */
     private final String status;
 
+    /** Пользователи, закрепленные за полигоном
+     * @see UserDTO
+     */
+    private final List<UserDTO> users;
+
     /** Создание DTO из класса {@link ConstructionProject}
      * @param constructionProject {@link ConstructionProject}
      * */
-    public static ConstructionProjectDTO formConstructionProject(ConstructionProject constructionProject, List<PostDTO> posts){
+    public static ConstructionProjectDTO formConstructionProject(ConstructionProject constructionProject, List<PostDTO> posts, List<UserDTO> users){
         return ConstructionProjectDTO.builder()
                 .id(constructionProject.getId())
                 .name(constructionProject.getName())
                 .description(constructionProject.getDescription())
                 .coordinates(constructionProject.getCoordinates())
                 .posts(posts)
+                .users(users)
                 .status(constructionProject.getStatus().getCode())
                 .responsibleContractor(
                         UserDTO.formUser(
