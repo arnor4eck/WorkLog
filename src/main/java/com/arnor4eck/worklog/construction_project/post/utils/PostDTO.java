@@ -1,8 +1,7 @@
 package com.arnor4eck.worklog.construction_project.post.utils;
 
-import com.arnor4eck.worklog.construction_project.ConstructionProject;
 import com.arnor4eck.worklog.construction_project.post.Post;
-import com.arnor4eck.worklog.user.UserDTO;
+import com.arnor4eck.worklog.user.utils.UserDTO;
 import lombok.Builder;
 import lombok.Data;
 

@@ -3,8 +3,7 @@ package com.arnor4eck.worklog.construction_project.utils;
 import com.arnor4eck.worklog.construction_project.ConstructionProject;
 import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
 import com.arnor4eck.worklog.construction_project.post.utils.PostDTO;
-import com.arnor4eck.worklog.user.User;
-import com.arnor4eck.worklog.user.UserDTO;
+import com.arnor4eck.worklog.user.utils.UserDTO;
 import lombok.Builder;
 import lombok.Data;
 

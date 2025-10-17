@@ -1,6 +1,7 @@
 package com.arnor4eck.worklog.security.authorization.jwt.jwt_utils;
 
 import com.arnor4eck.worklog.user.User;
+import com.arnor4eck.worklog.user.role.Role;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -75,7 +76,7 @@ public class JwtAuthUtils implements JwtUtils<User>{
     /** Получение ролей пользователя из токена
      * @param token токен
      * @return список - роли пользователя
-     * @see com.arnor4eck.worklog.user.Role
+     * @see Role
      * */
     public List<String> getRoles(String token){
         return getClaimsFromToken(token).get("roles", List.class);

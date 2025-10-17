@@ -1,4 +1,4 @@
-package com.arnor4eck.worklog.user;
+package com.arnor4eck.worklog.user.role;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

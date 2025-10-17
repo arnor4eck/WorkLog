@@ -48,7 +48,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(token);
                 }
             }else{
-                sendErrorResponse(response, "Invalid JWT");
+                sendErrorResponse(response, "Invalid JWT auth");
                 return;
             }
         }

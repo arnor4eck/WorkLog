@@ -3,7 +3,7 @@ package com.arnor4eck.worklog.security;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtAccessDeniedHandler;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtAuthenticationEntryPoint;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtRequestFilter;
-import com.arnor4eck.worklog.security.authorization.jwt.JwtAccessFilter;
+//import com.arnor4eck.worklog.security.authorization.jwt.JwtAccessFilter;
 import com.arnor4eck.worklog.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +40,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    private final JwtAccessFilter jwtAccessFilter;
+    //private final JwtAccessFilter jwtAccessFilter;
 
     /** Указание алгоритма шифрования пароля
      * */
@@ -103,7 +103,7 @@ public class SecurityConfig {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 }) // отключение сессий
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(jwtAccessFilter, JwtRequestFilter.class)
+                //.addFilterAfter(jwtAccessFilter, JwtRequestFilter.class)
                 .build();
     }
 }

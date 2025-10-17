@@ -4,10 +4,13 @@ import com.arnor4eck.worklog.construction_project.ConstructionProjectRepository;
 import com.arnor4eck.worklog.construction_project.post.files.FilesService;
 import com.arnor4eck.worklog.construction_project.post.utils.PostDTO;
 import com.arnor4eck.worklog.construction_project.post.utils.PostNotFoundException;
+import com.arnor4eck.worklog.construction_project.post.utils.PostStatus;
 import com.arnor4eck.worklog.construction_project.utils.ProjectNotFoundException;
 import com.arnor4eck.worklog.construction_project.post.request.CreatePostRequest;
+import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +19,8 @@ import java.nio.file.FileAlreadyExistsException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 /** Сервис для постов
  * @see Post
@@ -39,10 +44,11 @@ public class PostService {
      * @throws ProjectNotFoundException Если полигона с переданным ID не существует
      * @see FilesService#saveFile(MultipartFile, String)
      * */
-    public void createPost(Long objectId, CreatePostRequest request) throws FileAlreadyExistsException {
+    public void createPost(Long objectId, CreatePostRequest request, List<MultipartFile> requestFiles) throws FileAlreadyExistsException {
         Post post = postRepository.save(Post.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
+                .status(request.getStatus())
                 .author(userRepository.findById(
                         request.getAuthor()).orElseThrow(
                                 () -> new UsernameNotFoundException("Пользователя с id '%d' не существует".formatted(request.getAuthor()))))
@@ -52,12 +58,20 @@ public class PostService {
 
         List<String> files = new LinkedList<>();
 
-        for(MultipartFile file : request.getFiles()){
+        for(MultipartFile file : requestFiles){
             filesService.saveFile(file, filesService.createPath(file.getOriginalFilename(), objectId, post.getId()));
             files.add(file.getOriginalFilename());
         }
         post.setFiles(files);
         postRepository.save(post);
+    }
+
+    public void createPostBySender(Long objectId, String title, String content, String status, List<MultipartFile> requestFiles) throws FileAlreadyExistsException{
+        User user = userRepository.findByEmail(
+                (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        this.createPost(objectId,
+                new CreatePostRequest(title, content, user.getId(), PostStatus.fromCode(status)),
+                requestFiles);
     }
 
     /** Получение поста по ID

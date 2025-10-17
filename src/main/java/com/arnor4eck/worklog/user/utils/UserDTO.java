@@ -1,30 +1,30 @@
-package com.arnor4eck.worklog.user;
+package com.arnor4eck.worklog.user.utils;
 
+import com.arnor4eck.worklog.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 /** Data-Transfer Object для User
  * @see User
  * */
 @Data
 @Builder
+@AllArgsConstructor
 public class UserDTO {
 
     /** Имя пользователя в формате ФИО
      * */
-    private final String username;
+    protected final String username;
 
     /** Должность пользователя
      * */
-    private final String position;
+    protected final String position;
 
     /** Электронная почта пользователя
      * */
-    private final String email;
+    protected final String email;
 
-    private final String role;
 
     /** Создание DTO из класса {@link User}
      * @param user {@link User}
@@ -35,7 +35,6 @@ public class UserDTO {
                 .username(user.getUsername())
                 .position(user.getPosition())
                 .email(user.getEmail())
-                .role(user.getAuthorities().get(0).getName())
                 .build();
     }
 }
