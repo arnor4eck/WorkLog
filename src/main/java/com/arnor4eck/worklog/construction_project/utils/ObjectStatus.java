@@ -1,10 +1,12 @@
 package com.arnor4eck.worklog.construction_project.utils;
 
-import java.util.Arrays;
-
+/** Перечисление возможных статусов полигона
+ * */
 public enum ObjectStatus {
-    ACTIVE("active"), COMPLETED("complited"), PLANNED("planned");
+    ACTIVE("active"), COMPLETED("completed"), PLANNED("planned");
 
+    /** Статус полигона (на русском языке)
+     * */
     private final String code;
 
     ObjectStatus(String code) {
@@ -13,12 +15,5 @@ public enum ObjectStatus {
 
     public String getCode() {
         return code;
-    }
-
-    public static ObjectStatus fromCode(String code) {
-        return Arrays.stream(values())
-                .filter(status -> status.code.equals(code))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Невалидный код: " + code));
     }
 }

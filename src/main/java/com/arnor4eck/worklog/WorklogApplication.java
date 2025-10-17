@@ -6,7 +6,7 @@ import com.arnor4eck.worklog.construction_project.coordinates.Coordinates;
 import com.arnor4eck.worklog.construction_project.post.Post;
 import com.arnor4eck.worklog.construction_project.post.PostRepository;
 import com.arnor4eck.worklog.construction_project.post.files.FilesService;
-import com.arnor4eck.worklog.construction_project.post.utils.PostStatus;
+import com.arnor4eck.worklog.construction_project.post.utils.PostType;
 import com.arnor4eck.worklog.construction_project.utils.ObjectStatus;
 import com.arnor4eck.worklog.cv.CVService;
 import com.arnor4eck.worklog.user.role.Role;
@@ -108,12 +108,12 @@ public class WorklogApplication {
 
 			List<Post> posts = List.of(new Post("Нарушение разметки", "Поменять белый цвет на желтый."),
 					new Post("Исправление разметки", "Изменено."), new Post("Завершение проекта", "роект - В С Е"));
-			posts.get(0).setStatus(PostStatus.ADDING_VIOLATIONS);
+			posts.get(0).setType(PostType.ADDING_VIOLATIONS);
 			posts.get(0).setAuthor(userRepository.findById(2L).get());
-			posts.get(1).setStatus(PostStatus.CONFIRMING_CORRECTIONS);
+			posts.get(1).setType(PostType.CONFIRMING_CORRECTIONS);
 			posts.get(1).setAuthor(userRepository.findById(1L).get());
 			posts.get(2).setAuthor(userRepository.findById(1L).get());
-			posts.get(2).setStatus(PostStatus.PERFORMING_WORK);
+			posts.get(2).setType(PostType.PERFORMING_WORK);
 
 			posts.get(0).setObject(constructionProjectRepository.findById(1L).orElseThrow());
 			posts.get(1).setObject(constructionProjectRepository.findById(1L).orElseThrow());

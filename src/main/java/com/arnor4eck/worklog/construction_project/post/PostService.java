@@ -4,7 +4,7 @@ import com.arnor4eck.worklog.construction_project.ConstructionProjectRepository;
 import com.arnor4eck.worklog.construction_project.post.files.FilesService;
 import com.arnor4eck.worklog.construction_project.post.utils.PostDTO;
 import com.arnor4eck.worklog.construction_project.post.utils.PostNotFoundException;
-import com.arnor4eck.worklog.construction_project.post.utils.PostStatus;
+import com.arnor4eck.worklog.construction_project.post.utils.PostType;
 import com.arnor4eck.worklog.construction_project.utils.ProjectNotFoundException;
 import com.arnor4eck.worklog.construction_project.post.request.CreatePostRequest;
 import com.arnor4eck.worklog.user.User;
@@ -18,9 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 /** Сервис для постов
  * @see Post
@@ -48,7 +45,7 @@ public class PostService {
         Post post = postRepository.save(Post.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .status(request.getStatus())
+                .type(request.getStatus())
                 .author(userRepository.findById(
                         request.getAuthor()).orElseThrow(
                                 () -> new UsernameNotFoundException("Пользователя с id '%d' не существует".formatted(request.getAuthor()))))
@@ -66,11 +63,20 @@ public class PostService {
         postRepository.save(post);
     }
 
+    /** Создает запись от лица авторизированного пользователя
+     * @param objectId ID полигона
+     * @param title Заголовок записи
+     * @param content Содержимое записи
+     * @param status Тип записи
+     * @param requestFiles Файлы поста
+     * @see PostType
+     * @see PostService#createPost(Long, CreatePostRequest, List) 
+     * */
     public void createPostBySender(Long objectId, String title, String content, String status, List<MultipartFile> requestFiles) throws FileAlreadyExistsException{
         User user = userRepository.findByEmail(
                 (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         this.createPost(objectId,
-                new CreatePostRequest(title, content, user.getId(), PostStatus.fromCode(status)),
+                new CreatePostRequest(title, content, user.getId(), PostType.fromCode(status)),
                 requestFiles);
     }
 
@@ -85,6 +91,9 @@ public class PostService {
                         new PostNotFoundException("Поста с id '%d' не существует".formatted(postId))));
     }
 
+    /** Поиск постов по ID полгона
+     * @see PostRepository#findByObjectId(Long) 
+     * */
     public List<PostDTO> getPostsByObjectId(Long objectId){
         return postRepository.findByObjectId(objectId).stream().map(PostDTO::fromPost).toList();
     }

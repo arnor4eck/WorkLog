@@ -1,10 +1,10 @@
 package com.arnor4eck.worklog.construction_project.post.utils;
 
-import com.arnor4eck.worklog.construction_project.utils.ObjectStatus;
-
 import java.util.Arrays;
 
-public enum PostStatus {
+/** Перечисление возможных типов записей
+ * */
+public enum PostType {
     ADDING_VIOLATIONS("Добавление нарушения"), // инспектор
     INITIATING_LABORATORY_SAMPLING("Инициирование лабораторного отбора"), // инспектор
     CONFIRMING_CORRECTIONS("Подтверждение исправления нарушения"), // инспектор
@@ -17,9 +17,11 @@ public enum PostStatus {
     TTN("Добавление товарно-транспортной накладной"),
     PERFORMING_WORK("Выполнение работ");
 
+    /** Тип записи (на русском языке)
+     * */
     private final String code;
 
-    PostStatus(String code){
+    PostType(String code){
         this.code = code;
     }
 
@@ -27,7 +29,12 @@ public enum PostStatus {
         return this.code;
     }
 
-    public static PostStatus fromCode(String code) {
+    /** Поиск поля перечисления по русскому типу записи
+     * @param code Тип записи на русском языке
+     * @return PostType - поле перечисления
+     * @throws IllegalArgumentException В случае, если переданный {@link PostType#code} некорректен
+     * */
+    public static PostType fromCode(String code) throws IllegalArgumentException {
         return Arrays.stream(values())
                 .filter(status -> status.code.equals(code))
                 .findFirst()
