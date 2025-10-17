@@ -20,7 +20,7 @@ public class PostDTO {
 
     /** Заголовок поста
      * */
-    private final String title;
+        private final String title;
 
     /** Содержимое поста
      * */
@@ -39,6 +39,8 @@ public class PostDTO {
      * */
     private final UserDTO author;
 
+    private final String status;
+
     /** Создание DTO из класса {@link Post}
      * @param post {@link Post}
      * */
@@ -47,6 +49,7 @@ public class PostDTO {
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .status(post.getStatus().getCode())
                 .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy '['HH:mm']'")))
                 .files(post.getFiles())
                 .author(UserDTO.formUser(post.getAuthor()))

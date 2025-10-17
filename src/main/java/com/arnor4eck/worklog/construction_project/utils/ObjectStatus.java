@@ -3,7 +3,7 @@ package com.arnor4eck.worklog.construction_project.utils;
 import java.util.Arrays;
 
 public enum ObjectStatus {
-    ACTIVE("active"), COMPLETED("complited"), PLANNED("complited");
+    ACTIVE("active"), COMPLETED("complited"), PLANNED("planned");
 
     private final String code;
 
@@ -19,6 +19,6 @@ public enum ObjectStatus {
         return Arrays.stream(values())
                 .filter(status -> status.code.equals(code))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown code: " + code));
+                .orElseThrow(() -> new IllegalArgumentException("Невалидный код: " + code));
     }
 }

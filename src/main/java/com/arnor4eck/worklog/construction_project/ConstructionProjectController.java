@@ -1,6 +1,5 @@
 package com.arnor4eck.worklog.construction_project;
 
-import com.arnor4eck.worklog.construction_project.post.files.utils.FileNotFound;
 import com.arnor4eck.worklog.construction_project.post.utils.PostDTO;
 import com.arnor4eck.worklog.construction_project.post.PostService;
 import com.arnor4eck.worklog.construction_project.post.files.FilesService;
@@ -20,8 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
@@ -134,13 +131,7 @@ public class ConstructionProjectController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void loadActOfOpening(@PathVariable("object_id") Long objectId,
                                  @RequestParam(required = true) MultipartFile file) throws IOException {
-        try{
-            Path fileDeleted = filesService.findFile(objectId, "act");
-            filesService.deleteFile(fileDeleted.toAbsolutePath().toString());
-        } catch (FileNotFound e){} finally {
-            String pathToFile = filesService.createPathToObject(objectId) + File.separator + "act" + filesService.getPostfix(file.getOriginalFilename());
-            filesService.saveFile(file, pathToFile);
-        }
+        filesService.uploadToObject(objectId, "act", file);
     }
 
     @GetMapping(path="{object_id}/act/")
@@ -162,13 +153,7 @@ public class ConstructionProjectController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void loadСompositionOfWorks(@PathVariable("object_id") Long objectId,
                                  @RequestParam(required = true) MultipartFile file) throws IOException {
-        try{
-            Path fileDeleted = filesService.findFile(objectId, "works");
-            filesService.deleteFile(fileDeleted.toAbsolutePath().toString());
-        } catch (FileNotFound e){} finally {
-            String pathToFile = filesService.createPathToObject(objectId) + File.separator + "works" + filesService.getPostfix(file.getOriginalFilename());
-            filesService.saveFile(file, pathToFile);
-        }
+        filesService.uploadToObject(objectId, "works", file);
     }
 
     @GetMapping(path="{object_id}/works/")

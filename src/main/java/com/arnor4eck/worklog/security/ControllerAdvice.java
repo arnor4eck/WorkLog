@@ -1,6 +1,6 @@
 package com.arnor4eck.worklog.security;
 
-import com.arnor4eck.worklog.construction_project.post.files.utils.FileNotFound;
+import com.arnor4eck.worklog.construction_project.post.files.utils.FileNotFoundException;
 import com.arnor4eck.worklog.construction_project.post.utils.PostNotFoundException;
 import com.arnor4eck.worklog.construction_project.utils.ProjectNotFoundException;
 import com.arnor4eck.worklog.utils.ExceptionResponse;
@@ -10,8 +10,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.io.FileNotFoundException;
 
 /** Контроллер, позволяющий централизованно обрабатывать исключения во всём приложении
  * */
@@ -25,7 +23,7 @@ public class ControllerAdvice {
      * @return ResponseEntity с кодом {@code 404} и телом в виде сообщения об ошибке
      * */
     @ExceptionHandler({UsernameNotFoundException.class, ProjectNotFoundException.class,
-                        PostNotFoundException.class, FileNotFound.class})
+                        PostNotFoundException.class, FileNotFoundException.class})
     public ResponseEntity<ExceptionResponse> notFoundException(Exception exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)

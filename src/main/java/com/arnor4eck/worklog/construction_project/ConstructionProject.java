@@ -33,7 +33,7 @@ public class ConstructionProject {
 
     /** Описание полигона
      * */
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1024)
     private String description;
 
     /** Координаты, связанные с полигоном
@@ -59,7 +59,6 @@ public class ConstructionProject {
 
     public void addResponsibleContractor(User user){
         this.responsibleContractor = user;
-        users.add(user);
     }
 
     /** Ответственный пользователь, назначаемый от технического надзора
@@ -71,7 +70,6 @@ public class ConstructionProject {
 
     public void addResponsibleSupervision(User user){
         this.responsibleSupervision = user;
-        users.add(user);
     }
 
     /** Статус объекта
