@@ -41,7 +41,7 @@ public class WorklogApplication {
 	private final FilesService filesService;
 
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 		SpringApplication.run(WorklogApplication.class, args);
 	}
 
@@ -71,11 +71,20 @@ public class WorklogApplication {
 							passwordEncoder.encode("admin_password"), "Админов Админ Админщикович",
 							List.of(roles.getLast())));
 
+
 			userRepository.saveAll(users);
+			userRepository.save(new User("iii@mail.ru", "Подрядчик", "password", "Попова Варвара Андреевна", List.of(roles.get(0))));
 
 			ConstructionProject project = new ConstructionProject("Некрасовка", "Жилой комплекс класса «бизнес+» из трёх корпусов высотой от 3 до 28 этажей. Корпуса объединены гранд-лобби с мягкими зонами отдыха и кофейней, предусмотрена общественная терраса. На придомовой территории разместятся детская и спортивная площадки. Два подземных уровня займут паркинг на 257 машино-мест и кладовые.");
 
 			ConstructionProject project2 = new ConstructionProject("Пропект Мира 194", "Широкие дороги для быстро движущегося транспорта. Обычно спроектированы с четырьмя полосами движения, по две полосы в каждом направлении. На автомагистралях нет пересечений железных дорог, светофоров или пешеходных переходов.");
+
+			ConstructionProject project3 = new ConstructionProject("Каргопольская улица д. 18",
+					"Современная и стильная конструкция закрытого типа с раздвижным панорамным остеклением, вальмовой крышей покрытой мягкой кровлей и системой водостока. Все деревянные элементы беседки обрабатываются специальными составами против процессов гниения и для повышения пожаробезопасности, что значительно увеличивает срок ее службы.");
+
+			ConstructionProject project4 = new ConstructionProject("Флотская улица д. 54, д. 58к1",
+					"Одноэтажный дом 12 на 8 метров, общей площадью 96 м2, из СИП панелей, с террасой и спальней на первом этаже.");
+
 
 			List<Coordinates> coord1 = List.of(
 					new Coordinates(37.5051681643041, 55.8554111603478),
@@ -114,23 +123,36 @@ public class WorklogApplication {
 			);
 
 			project.setCoordinates(coord1);
+			project3.setCoordinates(coord1);
 			project2.setCoordinates(coord2);
+			project4.setCoordinates(coord2);
 
 			IntStream.range(1, 4).forEach(i -> project.getUsers().add(userRepository.findById((long) i).get()));
 			project.addResponsibleSupervision(userRepository.findById(2L).get());
 			project.addResponsibleContractor(userRepository.findById(1L).get());
 
+			IntStream.range(1, 4).forEach(i -> project4.getUsers().add(userRepository.findById((long) i).get()));
+			project4.addResponsibleSupervision(userRepository.findById(2L).get());
+			project4.addResponsibleContractor(userRepository.findById(6L).get());
+
+			IntStream.range(1, 4).forEach(i -> project3.getUsers().add(userRepository.findById((long) i).get()));
 			IntStream.range(1, 4).forEach(i -> project2.getUsers().add(userRepository.findById((long) i).get()));
+			project3.addResponsibleSupervision(userRepository.findById(2L).get());
+			project3.addResponsibleContractor(userRepository.findById(6L).get());
 			project2.addResponsibleSupervision(userRepository.findById(2L).get());
 			project2.addResponsibleContractor(userRepository.findById(1L).get());
 
 			project.setStatus(ObjectStatus.ACTIVE);
 			project2.setStatus(ObjectStatus.COMPLETED);
-			constructionProjectRepository.saveAll(List.of(project, project2));
+			project3.setStatus(ObjectStatus.PLANNED);
+			project4.setStatus(ObjectStatus.ACTIVE);
+			constructionProjectRepository.saveAll(List.of(project, project2, project3, project4));
 
 			try{
 				Files.createDirectories(Path.of(filesService.createPathToObject(project.getId())));
 				Files.createDirectories(Path.of(filesService.createPathToObject(project2.getId())));
+				Files.createDirectories(Path.of(filesService.createPathToObject(project3.getId())));
+				Files.createDirectories(Path.of(filesService.createPathToObject(project4.getId())));
 			}catch (IOException e){
 				throw new RuntimeException(e);
 			}
