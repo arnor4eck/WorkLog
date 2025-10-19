@@ -127,16 +127,16 @@ public class WorklogApplication {
 			project2.setCoordinates(coord2);
 			project4.setCoordinates(coord2);
 
-			IntStream.range(1, 4).forEach(i -> project.getUsers().add(userRepository.findById((long) i).get()));
+			IntStream.range(1, 5).forEach(i -> project.getUsers().add(userRepository.findById((long) i).get()));
 			project.addResponsibleSupervision(userRepository.findById(2L).get());
 			project.addResponsibleContractor(userRepository.findById(1L).get());
 
-			IntStream.range(1, 4).forEach(i -> project4.getUsers().add(userRepository.findById((long) i).get()));
+			IntStream.range(1, 5).forEach(i -> project4.getUsers().add(userRepository.findById((long) i).get()));
 			project4.addResponsibleSupervision(userRepository.findById(2L).get());
 			project4.addResponsibleContractor(userRepository.findById(6L).get());
 
-			IntStream.range(1, 4).forEach(i -> project3.getUsers().add(userRepository.findById((long) i).get()));
-			IntStream.range(1, 4).forEach(i -> project2.getUsers().add(userRepository.findById((long) i).get()));
+			IntStream.range(1, 5).forEach(i -> project3.getUsers().add(userRepository.findById((long) i).get()));
+			IntStream.range(1, 5).forEach(i -> project2.getUsers().add(userRepository.findById((long) i).get()));
 			project3.addResponsibleSupervision(userRepository.findById(2L).get());
 			project3.addResponsibleContractor(userRepository.findById(6L).get());
 			project2.addResponsibleSupervision(userRepository.findById(2L).get());
