@@ -10,6 +10,7 @@ import com.arnor4eck.worklog.construction_project.post.request.CreatePostRequest
 import com.arnor4eck.worklog.user.User;
 import com.arnor4eck.worklog.user.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.List;
  * */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class PostService {
     private final FilesService filesService;
 
@@ -60,7 +62,8 @@ public class PostService {
             files.add(file.getOriginalFilename());
         }
         post.setFiles(files);
-        postRepository.save(post);
+        long id = postRepository.save(post).getId();
+        log.info("Создана запись к полигону '{}'; ID - '{}'", objectId, id);
     }
 
     /** Создает запись от лица авторизированного пользователя
