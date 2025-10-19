@@ -3,7 +3,6 @@ package com.arnor4eck.worklog.security;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtAccessDeniedHandler;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtAuthenticationEntryPoint;
 import com.arnor4eck.worklog.security.authorization.jwt.JwtRequestFilter;
-//import com.arnor4eck.worklog.security.authorization.jwt.JwtAccessFilter;
 import com.arnor4eck.worklog.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -30,13 +30,9 @@ import java.util.stream.IntStream;
 @AllArgsConstructor
 public class WorklogApplication {
 
-	private final CVService tesseract;
-
 	private final RoleRepository roleRepository;
 
 	private final UserRepository userRepository;
-
-	private final PostRepository postRepository;
 
 	private final ConstructionProjectRepository constructionProjectRepository;
 
@@ -77,15 +73,48 @@ public class WorklogApplication {
 
 			userRepository.saveAll(users);
 
-			ConstructionProject project = new ConstructionProject("Жилой комплекс \"Ромашка\"", "Жилой комплекс класса «бизнес+» из трёх корпусов высотой от 3 до 28 этажей. Корпуса объединены гранд-лобби с мягкими зонами отдыха и кофейней, предусмотрена общественная терраса. На придомовой территории разместятся детская и спортивная площадки. Два подземных уровня займут паркинг на 257 машино-мест и кладовые.");
+			ConstructionProject project = new ConstructionProject("Некрасовка", "Жилой комплекс класса «бизнес+» из трёх корпусов высотой от 3 до 28 этажей. Корпуса объединены гранд-лобби с мягкими зонами отдыха и кофейней, предусмотрена общественная терраса. На придомовой территории разместятся детская и спортивная площадки. Два подземных уровня займут паркинг на 257 машино-мест и кладовые.");
 
-			ConstructionProject project2 = new ConstructionProject("Шоссе M-2", "Широкие дороги для быстро движущегося транспорта. Обычно спроектированы с четырьмя полосами движения, по две полосы в каждом направлении. На автомагистралях нет пересечений железных дорог, светофоров или пешеходных переходов.");
+			ConstructionProject project2 = new ConstructionProject("Пропект Мира 194", "Широкие дороги для быстро движущегося транспорта. Обычно спроектированы с четырьмя полосами движения, по две полосы в каждом направлении. На автомагистралях нет пересечений железных дорог, светофоров или пешеходных переходов.");
 
-			Coordinates coord1 = new Coordinates(24.5734563746, 56.5617325627);
-			Coordinates coord2 = new Coordinates(434.5734563746, 436.5617325627);
+			List<Coordinates> coord1 = List.of(
+					new Coordinates(37.5051681643041, 55.8554111603478),
+					new Coordinates(37.5051839094663, 55.8554171325542),
+					new Coordinates(37.5065189053775, 55.8546957632065),
+					new Coordinates(37.5065805079280, 55.8546892396364),
+					new Coordinates(37.5066376875542, 55.8546837581157),
+					new Coordinates(37.5066423660015, 55.8546831112143),
+					new Coordinates(37.5066383562679, 55.8546710401115),
+					new Coordinates(37.5064796084454, 55.8546935286268),
+					new Coordinates(37.5064325378433, 55.8547091229083),
+					new Coordinates(37.5064179459915, 55.8547273562699),
+					new Coordinates(37.5064100429371, 55.8547340838674),
+					new Coordinates(37.5029119751658, 55.8542345482524),
+					new Coordinates(37.5028374215273, 55.8542132451531),
+					new Coordinates(37.5028087433880, 55.8542050544049),
+					new Coordinates(37.5027640655535, 55.8541922922719),
+					new Coordinates(37.5027511506080, 55.8542458768261),
+					new Coordinates(37.5027440306133, 55.8542754713786),
+					new Coordinates(37.5027366392151, 55.8543061527109),
+					new Coordinates(37.5027365434356, 55.8543066556831),
+					new Coordinates(37.5027364636177, 55.8543070418940),
+					new Coordinates(37.5027341967650, 55.8543175773704),
+					new Coordinates(37.5027276194836, 55.8543440822357),
+					new Coordinates(37.5026842118273, 55.8545077100697));
+			List<Coordinates> coord2 = List.of(
+					new Coordinates(37.6597164421708, 55.8368057992660),
+					new Coordinates(37.6596903157171, 55.8368177247358),
+					new Coordinates(37.6596489456177, 55.8368332176435),
+					new Coordinates(37.6595588116452, 55.8368710569844),
+					new Coordinates(37.6595046403276, 55.8368941828122),
+					new Coordinates(37.6594899397336, 55.8369096053232),
+					new Coordinates(37.6594451195874, 55.8369284258267),
+					new Coordinates(37.6594386028550, 55.8369233146876),
+					new Coordinates(37.6594367454867, 55.8369218530731)
+			);
 
-			project.setCoordinates(List.of(coord1, coord2));
-			project2.setCoordinates(List.of(new Coordinates(284.6412647, 12.34673)));
+			project.setCoordinates(coord1);
+			project2.setCoordinates(coord2);
 
 			IntStream.range(1, 4).forEach(i -> project.getUsers().add(userRepository.findById((long) i).get()));
 			project.addResponsibleSupervision(userRepository.findById(2L).get());
@@ -106,20 +135,6 @@ public class WorklogApplication {
 				throw new RuntimeException(e);
 			}
 
-			List<Post> posts = List.of(new Post("Нарушение разметки", "Поменять белый цвет на желтый."),
-					new Post("Исправление разметки", "Изменено."), new Post("Завершение проекта", "роект - В С Е"));
-			posts.get(0).setType(PostType.ADDING_VIOLATIONS);
-			posts.get(0).setAuthor(userRepository.findById(2L).get());
-			posts.get(1).setType(PostType.CONFIRMING_CORRECTIONS);
-			posts.get(1).setAuthor(userRepository.findById(1L).get());
-			posts.get(2).setAuthor(userRepository.findById(1L).get());
-			posts.get(2).setType(PostType.PERFORMING_WORK);
-
-			posts.get(0).setObject(constructionProjectRepository.findById(1L).orElseThrow());
-			posts.get(1).setObject(constructionProjectRepository.findById(1L).orElseThrow());
-			posts.get(2).setObject(constructionProjectRepository.findById(2L).orElseThrow());
-
-			postRepository.saveAll(posts);
 		};
 	}
 }
